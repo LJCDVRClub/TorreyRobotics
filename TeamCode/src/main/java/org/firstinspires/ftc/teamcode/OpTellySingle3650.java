@@ -15,6 +15,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name="Telly Single", group="3650")
 public class OpTellySingle3650 extends OpMode {
 
+    //TeleOp using a single controller
+    //for more comments, go to OperationTelly3650
+
     //assigning state variables
     DcMotor rDrive, lDrive, collector, shooter;
     Servo colorServo, ballServo;
