@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by Bryce on 11/14/2016.
  */
 @Autonomous(name = "Automagical: RED", group = "3650")
-public class Automagical_RED extends LinearOpMode{
+public class Automagical_RED3650 extends LinearOpMode{
 
     ColorSensor colorSensor;
     OpticalDistanceSensor ods;

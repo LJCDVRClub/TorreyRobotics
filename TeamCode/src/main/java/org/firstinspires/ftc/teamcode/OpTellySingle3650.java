@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -10,10 +9,11 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by Bryce on 11/2/2016.
+ * Created by Bryce on 12/1/2016.
  */
-@TeleOp(name="Operation: Telly", group="3650")
-public class OperationTelly extends OpMode {
+
+@TeleOp(name="Telly Single", group="3650")
+public class OpTellySingle3650 extends OpMode {
 
     //assigning state variables
     DcMotor rDrive, lDrive, collector, shooter;
@@ -57,44 +57,24 @@ public class OperationTelly extends OpMode {
         lDrive.setPower(gamepad1.left_stick_y*.7);
         rDrive.setPower(gamepad1.right_stick_y*.7);
 
-
-        if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
-            shooter.setPower(-1.0);
-        }
-        else if (!gamepad2.dpad_down && gamepad2.right_trigger > 0){
-            shooter.setPower(gamepad2.right_trigger);
-        }
-        else{
-            shooter.setPower(0);
-        }
-
-        //shooter.setPower(((-1)*gamepad2.left_trigger));
+        shooter.setPower(gamepad1.right_trigger);
+        //shooter.setPower(-1*gamepad1.left_trigger);
 
 
         //servo controls for the movement of the color sensor
-        if (gamepad1.left_bumper) {
-            colorServo.setPosition(1.00);
-        }
-        else if (gamepad1.right_bumper) {
+        /*if (gamepad1.left_bumper) {
             colorServo.setPosition(-1.00);
         }
+        else if (gamepad1.right_bumper) {
+            colorServo.setPosition(1.00);
+        }*/
 
         //shooter flippy thing servo
-        if (gamepad2.dpad_up){//up
+        if (gamepad1.dpad_up){//up
             ballServo.setPosition(1.00);
         }
         else{//down
             ballServo.setPosition(0.14);
-        }
-
-        if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
-            shooter.setPower(-1.0);
-        }
-        else if (!gamepad2.dpad_down && gamepad2.right_trigger == 1){
-            shooter.setPower(1.0);
-        }
-        else{
-            shooter.setPower(0);
         }
 
 
@@ -109,11 +89,11 @@ public class OperationTelly extends OpMode {
         if (gamepad1.x){
             collector.setPower(0);//stopped
         }*/
-        if (gamepad2.left_bumper){
-            collector.setPower(-1.0);
+        if (gamepad1.left_bumper){
+            collector.setPower(1.0);
         }
-        else if(gamepad2.right_bumper){
-            collector.setPower(1.00);
+        else if(gamepad1.right_bumper){
+            collector.setPower(-1.00);
         }
         else {
             collector.setPower(0);
@@ -127,3 +107,4 @@ public class OperationTelly extends OpMode {
         telemetry.addData("Blue ", colorSensor.blue());
     }
 }
+

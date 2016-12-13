@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -9,11 +10,10 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by Bryce on 12/1/2016.
+ * Created by Bryce on 11/2/2016.
  */
-
-@TeleOp(name="Telly Single", group="3650")
-public class OpTellySingle extends OpMode {
+@TeleOp(name="Operation: Telly (NIKKO)", group="3650")
+public class NikkoTeleOp3650 extends OpMode {
 
     //assigning state variables
     DcMotor rDrive, lDrive, collector, shooter;
@@ -42,8 +42,6 @@ public class OpTellySingle extends OpMode {
 
         //Reversing direction of R Drive so it spins the correct way
         rDrive.setDirection(DcMotor.Direction.REVERSE);
-        rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //shooter.setDirection(DcMotor.Direction.REVERSE);
         ballServo.setPosition(0.14);
         colorSensor.enableLed(false);
@@ -54,23 +52,40 @@ public class OpTellySingle extends OpMode {
     public void loop() {
 
         //set motor controls to joystick
-        lDrive.setPower(gamepad1.left_stick_y*.7);
-        rDrive.setPower(gamepad1.right_stick_y*.7);
 
-        shooter.setPower(gamepad1.right_trigger);
-        //shooter.setPower(-1*gamepad1.left_trigger);
+
+        shooter.setPower(gamepad2.right_trigger);
+
+
+
+
+
+
+        if (gamepad1.right_trigger>0){
+            lDrive.setPower(gamepad1.left_stick_y*.5);
+            rDrive.setPower(gamepad1.right_stick_y*.5);
+
+        }
+
+        else if (gamepad1.right_trigger==0){
+
+            lDrive.setPower(gamepad1.left_stick_y);
+            rDrive.setPower(gamepad1.right_stick_y);
+
+
+        }
 
 
         //servo controls for the movement of the color sensor
-        /*if (gamepad1.left_bumper) {
+        if (gamepad1.left_bumper) {
             colorServo.setPosition(-1.00);
         }
         else if (gamepad1.right_bumper) {
             colorServo.setPosition(1.00);
-        }*/
+        }
 
         //shooter flippy thing servo
-        if (gamepad1.dpad_up){//up
+        if (gamepad2.dpad_up){//up
             ballServo.setPosition(1.00);
         }
         else{//down
@@ -89,11 +104,11 @@ public class OpTellySingle extends OpMode {
         if (gamepad1.x){
             collector.setPower(0);//stopped
         }*/
-        if (gamepad1.left_bumper){
-            collector.setPower(1.0);
+        if (gamepad2.left_bumper){
+            collector.setPower(-1.0);
         }
-        else if(gamepad1.right_bumper){
-            collector.setPower(-1.00);
+        else if(gamepad2.right_bumper){
+            collector.setPower(1.00);
         }
         else {
             collector.setPower(0);
@@ -107,4 +122,24 @@ public class OpTellySingle extends OpMode {
         telemetry.addData("Blue ", colorSensor.blue());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

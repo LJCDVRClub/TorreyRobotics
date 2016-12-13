@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Bryce on 11/2/2016.
  */
-@TeleOp(name="Operation: Telly (NIKKO)", group="3650")
-public class teleoptest extends OpMode {
+@TeleOp(name="Operation: Telly", group="3650")
+public class OperationTelly3650 extends OpMode {
 
     //assigning state variables
     DcMotor rDrive, lDrive, collector, shooter;
@@ -42,6 +42,8 @@ public class teleoptest extends OpMode {
 
         //Reversing direction of R Drive so it spins the correct way
         rDrive.setDirection(DcMotor.Direction.REVERSE);
+        rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //shooter.setDirection(DcMotor.Direction.REVERSE);
         ballServo.setPosition(0.14);
         colorSensor.enableLed(false);
@@ -52,36 +54,29 @@ public class teleoptest extends OpMode {
     public void loop() {
 
         //set motor controls to joystick
+        lDrive.setPower(gamepad1.left_stick_y*.7);
+        rDrive.setPower(gamepad1.right_stick_y*.7);
 
 
-        shooter.setPower(gamepad2.right_trigger);
-
-
-
-
-
-
-        if (gamepad1.right_trigger>0){
-            lDrive.setPower(gamepad1.left_stick_y*.5);
-            rDrive.setPower(gamepad1.right_stick_y*.5);
-
+        if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
+            shooter.setPower(-1.0);
+        }
+        else if (!gamepad2.dpad_down && gamepad2.right_trigger > 0){
+            shooter.setPower(gamepad2.right_trigger);
+        }
+        else{
+            shooter.setPower(0);
         }
 
-        else if (gamepad1.right_trigger==0){
-
-            lDrive.setPower(gamepad1.left_stick_y);
-            rDrive.setPower(gamepad1.right_stick_y);
-
-
-        }
+        //shooter.setPower(((-1)*gamepad2.left_trigger));
 
 
         //servo controls for the movement of the color sensor
         if (gamepad1.left_bumper) {
-            colorServo.setPosition(-1.00);
+            colorServo.setPosition(1.00);
         }
         else if (gamepad1.right_bumper) {
-            colorServo.setPosition(1.00);
+            colorServo.setPosition(-1.00);
         }
 
         //shooter flippy thing servo
@@ -90,6 +85,16 @@ public class teleoptest extends OpMode {
         }
         else{//down
             ballServo.setPosition(0.14);
+        }
+
+        if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
+            shooter.setPower(-1.0);
+        }
+        else if (!gamepad2.dpad_down && gamepad2.right_trigger == 1){
+            shooter.setPower(1.0);
+        }
+        else{
+            shooter.setPower(0);
         }
 
 
@@ -122,24 +127,3 @@ public class teleoptest extends OpMode {
         telemetry.addData("Blue ", colorSensor.blue());
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
