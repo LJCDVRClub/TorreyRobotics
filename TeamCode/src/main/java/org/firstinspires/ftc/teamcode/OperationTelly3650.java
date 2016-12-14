@@ -17,7 +17,6 @@ public class OperationTelly3650 extends OpMode {
 
     //assigning state variables
     DcMotor rDrive, lDrive, collector, shooter;
-    Servo colorServo, ballServo;
     ColorSensor colorSensor;
     OpticalDistanceSensor ods;
     LightSensor light;
@@ -33,10 +32,8 @@ public class OperationTelly3650 extends OpMode {
         rDrive = hardwareMap.dcMotor.get("rDrive");
         collector = hardwareMap.dcMotor.get("collector");
         shooter = hardwareMap.dcMotor.get("shooter");
-        colorServo = hardwareMap.servo.get("colorServo");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
-        ballServo = hardwareMap.servo.get("ballServo");
         ods = hardwareMap.opticalDistanceSensor.get("ods");
         light = hardwareMap.lightSensor.get("light");
 
@@ -44,8 +41,7 @@ public class OperationTelly3650 extends OpMode {
         rDrive.setDirection(DcMotor.Direction.REVERSE);
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //shooter.setDirection(DcMotor.Direction.REVERSE);
-        ballServo.setPosition(0.14);
+
         colorSensor.enableLed(false);
 
     }
@@ -68,25 +64,10 @@ public class OperationTelly3650 extends OpMode {
             shooter.setPower(0);
         }
 
-        //shooter.setPower(((-1)*gamepad2.left_trigger));
 
+        //not sure which one works, so commenting this out for now
 
-        //servo controls for the movement of the color sensor
-        if (gamepad1.left_bumper) {
-            colorServo.setPosition(1.00);
-        }
-        else if (gamepad1.right_bumper) {
-            colorServo.setPosition(-1.00);
-        }
-
-        //shooter flippy thing servo
-        if (gamepad2.dpad_up){//up
-            ballServo.setPosition(1.00);
-        }
-        else{//down
-            ballServo.setPosition(0.14);
-        }
-
+        /*
         if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
             shooter.setPower(-1.0);
         }
@@ -95,20 +76,11 @@ public class OperationTelly3650 extends OpMode {
         }
         else{
             shooter.setPower(0);
-        }
-
-
-
-        /*//moving ball collector
-        if(gamepad1.y){
-            collector.setPower(1.00);//up
-        }
-        if(gamepad1.a){
-            collector.setPower(-1.00);//down
-        }
-        if (gamepad1.x){
-            collector.setPower(0);//stopped
         }*/
+
+
+
+
         if (gamepad2.left_bumper){
             collector.setPower(-1.0);
         }

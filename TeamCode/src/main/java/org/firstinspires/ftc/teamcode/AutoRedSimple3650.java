@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 @Autonomous(name = "Automagical Red (Simple)", group = "3650")
 public class AutoRedSimple3650 extends LinearOpMode{
-    Servo colorServo, ballServo;
     DcMotor lDrive, rDrive, collector, shooter;
 
     @Override
@@ -20,10 +19,8 @@ public class AutoRedSimple3650 extends LinearOpMode{
         rDrive = hardwareMap.dcMotor.get("rDrive");
         collector = hardwareMap.dcMotor.get("collector");
         shooter = hardwareMap.dcMotor.get("shooter");
-        colorServo = hardwareMap.servo.get("colorServo");
-        ballServo =hardwareMap.servo.get("ballServo");
+
         lDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        //shooter.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -37,28 +34,28 @@ public class AutoRedSimple3650 extends LinearOpMode{
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
-        //sleep (wait) so it can finish moving
+
 
 
         //start spinning up shooter
 
         shooter.setPower(1.00);
+        //sleep (wait) so it can finish moving
         Thread.sleep(3300);
+
         lDrive.setPower(0);
         rDrive.setPower(0);
 
         //spin up collector
         collector.setPower(-1.00);
-        //Thread.sleep(750);
-        //move flippy servo up and shoot
-        //ballServo.setPosition(1.00);
+
         Thread.sleep(1000);
         collector.setPower(0);
         Thread.sleep(500);
         collector.setPower(-1.00);
         Thread.sleep(1000);
-        //reset servo and spin down motors
-        ballServo.setPosition(0.14);
+
+        //spin down motors
         collector.setPower(0);
         shooter.setPower(.4);
         Thread.sleep(2000);

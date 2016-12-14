@@ -20,7 +20,6 @@ public class OpTellySingle3650 extends OpMode {
 
     //assigning state variables
     DcMotor rDrive, lDrive, collector, shooter;
-    Servo colorServo, ballServo;
     ColorSensor colorSensor;
     OpticalDistanceSensor ods;
     LightSensor light;
@@ -36,10 +35,9 @@ public class OpTellySingle3650 extends OpMode {
         rDrive = hardwareMap.dcMotor.get("rDrive");
         collector = hardwareMap.dcMotor.get("collector");
         shooter = hardwareMap.dcMotor.get("shooter");
-        colorServo = hardwareMap.servo.get("colorServo");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
-        ballServo = hardwareMap.servo.get("ballServo");
+
         ods = hardwareMap.opticalDistanceSensor.get("ods");
         light = hardwareMap.lightSensor.get("light");
 
@@ -47,8 +45,7 @@ public class OpTellySingle3650 extends OpMode {
         rDrive.setDirection(DcMotor.Direction.REVERSE);
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //shooter.setDirection(DcMotor.Direction.REVERSE);
-        ballServo.setPosition(0.14);
+
         colorSensor.enableLed(false);
 
     }
@@ -61,37 +58,7 @@ public class OpTellySingle3650 extends OpMode {
         rDrive.setPower(gamepad1.right_stick_y*.7);
 
         shooter.setPower(gamepad1.right_trigger);
-        //shooter.setPower(-1*gamepad1.left_trigger);
 
-
-        //servo controls for the movement of the color sensor
-        /*if (gamepad1.left_bumper) {
-            colorServo.setPosition(-1.00);
-        }
-        else if (gamepad1.right_bumper) {
-            colorServo.setPosition(1.00);
-        }*/
-
-        //shooter flippy thing servo
-        if (gamepad1.dpad_up){//up
-            ballServo.setPosition(1.00);
-        }
-        else{//down
-            ballServo.setPosition(0.14);
-        }
-
-
-
-        /*//moving ball collector
-        if(gamepad1.y){
-            collector.setPower(1.00);//up
-        }
-        if(gamepad1.a){
-            collector.setPower(-1.00);//down
-        }
-        if (gamepad1.x){
-            collector.setPower(0);//stopped
-        }*/
         if (gamepad1.left_bumper){
             collector.setPower(1.0);
         }
