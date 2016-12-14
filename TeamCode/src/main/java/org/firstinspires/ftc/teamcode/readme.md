@@ -1,3 +1,3 @@
 ## All code goes here
 
-This is the code we write.  Please end all file names with your team #
+This is where we write the code.  Please end all file names with your team #
