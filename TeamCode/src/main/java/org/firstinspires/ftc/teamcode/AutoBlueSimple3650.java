@@ -13,10 +13,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name="Automagical Blue (Simple)", group = "3650")
 public class AutoBlueSimple3650 extends LinearOpMode {
 
-    /**
-    * COMMENTS ABOUT WHAT'S GOING ON IN AUTO RED (SIMPLE)
-     * They are basically the same thing, but the spin direction is reversed
-     */
 
     Servo colorServo, ballServo;
     DcMotor lDrive, rDrive, collector, shooter;
