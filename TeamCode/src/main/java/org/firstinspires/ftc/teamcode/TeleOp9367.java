@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //I think you need to have different names in .get for the different drives
 //-Bryce
 
-@TeleOp(name="Operation: Telly", group="9367")
+@TeleOp(name="TeleOp 9367", group="9367")
 public class TeleOp9367 extends OpMode{
     //assigning state variables
     DcMotor rfDrive, lfDrive, rrDrive, lrDrive;
