@@ -24,12 +24,12 @@ public class TeleOp9367 extends OpMode{
     public void init() {
 
         // linking variables to hardware components
-        lfDrive = hardwareMap.dcMotor.get("lDrive");
-        rfDrive = hardwareMap.dcMotor.get("rDrive");
-        lrDrive = hardwareMap.dcMotor.get("lDrive");
-        rrDrive = hardwareMap.dcMotor.get("rDrive");
+        lfDrive = hardwareMap.dcMotor.get("lfDrive");
+        rfDrive = hardwareMap.dcMotor.get("rfDrive");
+        lrDrive = hardwareMap.dcMotor.get("lrDrive");
+        rrDrive = hardwareMap.dcMotor.get("rrDrive");
 
-        //Check if drive names ok, may have conflicts ^
+
 
 
 
