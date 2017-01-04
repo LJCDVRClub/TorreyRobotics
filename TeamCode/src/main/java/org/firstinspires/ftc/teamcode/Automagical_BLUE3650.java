@@ -34,8 +34,8 @@ public class Automagical_BLUE3650 extends LinearOpMode{
         dThresh = 0.0015; //needed distance for CS
 
         //rest positions for servos
-        aftNeutral = -.7;
-        foreNeutral = -.5;
+        aftNeutral = 1.00;
+        foreNeutral = -.75;
 
         //button pushing servos
         forePush = hardwareMap.servo.get("forePush");

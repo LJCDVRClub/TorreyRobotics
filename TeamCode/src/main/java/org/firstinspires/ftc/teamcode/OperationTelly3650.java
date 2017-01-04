@@ -66,17 +66,17 @@ public class OperationTelly3650 extends OpMode {
         rDrive.setPower(gamepad1.right_stick_y*.7);
 
         if(gamepad1.right_bumper){
-            aftPush.setPosition(1.00);//perfect up
-            forePush.setPosition(-1.00);
+            aftPush.setPosition(aftPush.getPosition()-.1);
+            forePush.setPosition(forePush.getPosition()+.1);
         }
         else if(gamepad1.left_bumper){
-            aftPush.setPosition(-1.00);
-            forePush.setPosition(1.00);
+            aftPush.setPosition(aftPush.getPosition()+.1);
+            forePush.setPosition(forePush.getPosition()-.1);
         }
-        else{
+        /*else{
             aftPush.setPosition(0);
             forePush.setPosition(0);
-        }
+        }*/
 
 
         if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
@@ -122,5 +122,7 @@ public class OperationTelly3650 extends OpMode {
         telemetry.addData("Red ", colorSensor.red());
         telemetry.addData("Green ", colorSensor.green());
         telemetry.addData("Blue ", colorSensor.blue());
+        telemetry.addData("Aft ", aftPush.getPosition());
+        telemetry.addData("Fore ", forePush.getPosition());
     }
 }
