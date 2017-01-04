@@ -65,6 +65,19 @@ public class OperationTelly3650 extends OpMode {
         lDrive.setPower(gamepad1.left_stick_y*.7);
         rDrive.setPower(gamepad1.right_stick_y*.7);
 
+        if(gamepad1.right_bumper){
+            aftPush.setPosition(1.00);//perfect up
+            forePush.setPosition(-1.00);
+        }
+        else if(gamepad1.left_bumper){
+            aftPush.setPosition(-1.00);
+            forePush.setPosition(1.00);
+        }
+        else{
+            aftPush.setPosition(0);
+            forePush.setPosition(0);
+        }
+
 
         if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
             shooter.setPower(-1.0);
