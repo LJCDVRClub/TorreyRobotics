@@ -9,9 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by williamhuang on 14/12/16.
  */
 
-//TODO: put more comments!! I have no idea what is going on
-//I think you need to have different names in .get for the different drives
-//-Bryce
+
 
 @TeleOp(name="TeleOp 9367", group="9367")
 public class TeleOp9367 extends OpMode{
