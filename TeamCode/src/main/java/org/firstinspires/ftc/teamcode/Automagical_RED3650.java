@@ -19,17 +19,27 @@ public class Automagical_RED3650 extends LinearOpMode{
     ColorSensor colorSensor;
     OpticalDistanceSensor ods;
     LightSensor light;
+    Servo forePush, aftPush;
     DcMotor lDrive, rDrive, collector, shooter;
-    double lThresh, dThresh;
+    double lThresh, dThresh, aftNeutral, foreNeutral;
 
 
-    //TODO: add new servos once they are in robot
+
+
     @Override
     public void runOpMode() throws InterruptedException {
 
         lThresh = 0.25; //anything higher is white
         double perfectLight = .25; //check this!!  then replace it with lThresh
         dThresh = 0.0015; //needed distance for CS
+
+        //rest positions for servos
+        aftNeutral = 0;
+        foreNeutral = -.5;
+
+        //button pushing servos
+        forePush = hardwareMap.servo.get("forePush");
+        aftPush = hardwareMap.servo.get("aftPush");
 
         lDrive = hardwareMap.dcMotor.get("lDrive");
         rDrive = hardwareMap.dcMotor.get("rDrive");
@@ -45,6 +55,9 @@ public class Automagical_RED3650 extends LinearOpMode{
         rDrive.setDirection(DcMotor.Direction.REVERSE);
 
         //shooter.setDirection(DcMotor.Direction.REVERSE);
+
+        forePush.setPosition(foreNeutral);
+        aftPush.setPosition(aftNeutral);
 
 
 
@@ -115,13 +128,17 @@ public class Automagical_RED3650 extends LinearOpMode{
 
         if(colorSensor.red() > colorSensor.blue() && colorSensor.red() > 1){
             //hit button with servo
+            aftPush.setPosition(aftNeutral + .7);
             Thread.sleep(1000);
             //bring back servo
+            aftPush.setPosition(aftNeutral);
         }
         else if(colorSensor.blue() >= colorSensor.red()){
             //hit button with other servo
+            forePush.setPosition(foreNeutral + .7);
             Thread.sleep(1000);
             //bring servo back
+            forePush.setPosition(foreNeutral);
         }
         else{
             //run away

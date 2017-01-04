@@ -17,9 +17,11 @@ public class OperationTelly3650 extends OpMode {
 
     //assigning state variables
     DcMotor rDrive, lDrive, collector, shooter;
+    Servo forePush, aftPush;
     ColorSensor colorSensor;
     OpticalDistanceSensor ods;
     LightSensor light;
+    double aftNeutral, foreNeutral;
 
 
 
@@ -37,12 +39,22 @@ public class OperationTelly3650 extends OpMode {
         ods = hardwareMap.opticalDistanceSensor.get("ods");
         light = hardwareMap.lightSensor.get("light");
 
+        //rest positions for servos
+        aftNeutral = 0; //check these!!!
+        foreNeutral = -.5;
+
+        //button pushing servos
+        forePush = hardwareMap.servo.get("forePush");
+        aftPush = hardwareMap.servo.get("aftPush");
+
         //Reversing direction of R Drive so it spins the correct way
         rDrive.setDirection(DcMotor.Direction.REVERSE);
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         colorSensor.enableLed(false);
+        forePush.setPosition(foreNeutral);
+        aftPush.setPosition(aftNeutral);
 
     }
 
