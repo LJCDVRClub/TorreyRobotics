@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
  * Created by Bryce on 12/14/2016.
  */
-@TeleOp(name = "Automagically Shoot", group = "3650")
+@Autonomous(name = "Automagically Shoot", group = "3650")
 public class AutoShoot3650 extends LinearOpMode {
 
     DcMotor rDrive, lDrive, shooter, collector;

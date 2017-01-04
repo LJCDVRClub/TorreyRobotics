@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Bryce on 11/14/2016.
  */
-@Autonomous(name = "Automagical: RED", group = "3650")
-public class Automagical_RED3650 extends LinearOpMode{
+@Autonomous(name = "Automagical: Blue", group = "3650")
+public class Automagical_BLUE3650 extends LinearOpMode{
 
     ColorSensor colorSensor;
     OpticalDistanceSensor ods;
@@ -34,7 +34,7 @@ public class Automagical_RED3650 extends LinearOpMode{
         dThresh = 0.0015; //needed distance for CS
 
         //rest positions for servos
-        aftNeutral = 0;
+        aftNeutral = -.7;
         foreNeutral = -.5;
 
         //button pushing servos
@@ -52,7 +52,7 @@ public class Automagical_RED3650 extends LinearOpMode{
         light = hardwareMap.lightSensor.get("light");
 
 
-        rDrive.setDirection(DcMotor.Direction.REVERSE);
+        lDrive.setDirection(DcMotor.Direction.REVERSE);
 
         //shooter.setDirection(DcMotor.Direction.REVERSE);
 
@@ -83,18 +83,22 @@ public class Automagical_RED3650 extends LinearOpMode{
         collector.setPower(-1.00);
         Thread.sleep(1000);
 
-        //wait for shooter to speed up again
+        //wait for shooter to speed down
         collector.setPower(0);
         shooter.setPower(.4);
         Thread.sleep(1000);
         shooter.setPower(0);
 
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+300);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1300);
+
+
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        //backwards is forwards for some reason
-        lDrive.setPower(-.5);
-        rDrive.setPower(-.5);
+
+        lDrive.setPower(.5);
+        rDrive.setPower(.5);
 
         while(ods.getLightDetected() <= 0){
             continue;
@@ -104,6 +108,7 @@ public class Automagical_RED3650 extends LinearOpMode{
         rDrive.setPower(0);
 
         Thread.sleep(750);
+
 
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
