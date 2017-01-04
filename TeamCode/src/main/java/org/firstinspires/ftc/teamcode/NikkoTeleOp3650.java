@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name="Operation: Telly (NIKKO)", group="3650")
 public class NikkoTeleOp3650 extends OpMode {
 
-    //HI
+    //HI v2
 
     //assigning state variables
     DcMotor rDrive, lDrive, collector, shooter;
