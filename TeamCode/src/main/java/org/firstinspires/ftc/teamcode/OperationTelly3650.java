@@ -40,8 +40,8 @@ public class OperationTelly3650 extends OpMode {
         light = hardwareMap.lightSensor.get("light");
 
         //rest positions for servos
-        aftNeutral = 0; //check these!!!
-        foreNeutral = -.5;
+        aftNeutral = 1.00; //check these!!!
+        foreNeutral = .1;
 
         //button pushing servos
         forePush = hardwareMap.servo.get("forePush");
@@ -66,17 +66,17 @@ public class OperationTelly3650 extends OpMode {
         rDrive.setPower(gamepad1.right_stick_y*.7);
 
         if(gamepad1.right_bumper){
-            aftPush.setPosition(aftPush.getPosition()-.1);
+            //aftPush.setPosition(aftPush.getPosition()-.1);
             forePush.setPosition(forePush.getPosition()+.1);
         }
         else if(gamepad1.left_bumper){
-            aftPush.setPosition(aftPush.getPosition()+.1);
-            forePush.setPosition(forePush.getPosition()-.1);
+            aftPush.setPosition(aftPush.getPosition()-.1);
+            //forePush.setPosition(forePush.getPosition()-.1);
         }
-        /*else{
-            aftPush.setPosition(0);
-            forePush.setPosition(0);
-        }*/
+        else{
+            aftPush.setPosition(aftNeutral);
+            forePush.setPosition(foreNeutral);
+        }
 
 
         if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
