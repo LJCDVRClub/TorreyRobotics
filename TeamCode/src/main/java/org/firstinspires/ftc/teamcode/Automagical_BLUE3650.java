@@ -136,14 +136,14 @@ public class Automagical_BLUE3650 extends LinearOpMode{
         lDrive.setPower(0);
         Thread.sleep(2000);
 
-        if(colorSensor.red() > colorSensor.blue()){
+        if(colorSensor.blue() > colorSensor.red()){
             //hit button with servo
             aftPush.setPosition(aftNeutral - .4);
             Thread.sleep(2500);
             //bring back servo
             aftPush.setPosition(aftNeutral);
         }
-        else if(colorSensor.blue() >= colorSensor.red()){
+        else if(colorSensor.red() >= colorSensor.blue()){
             //hit button with other servo
             forePush.setPosition(foreNeutral + .4);
             Thread.sleep(2500);
