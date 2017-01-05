@@ -29,13 +29,13 @@ public class Automagical_BLUE3650 extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        lThresh = 0.25; //anything higher is white
+        lThresh = 0.075; //anything higher is white
         double perfectLight = .25; //check this!!  then replace it with lThresh
-        dThresh = 0.0015; //needed distance for CS
+        //dThresh = 0.0015; //needed distance for CS
 
         //rest positions for servos
         aftNeutral = 1.00;
-        foreNeutral = -.75;
+        foreNeutral = .1;
 
         //button pushing servos
         forePush = hardwareMap.servo.get("forePush");
@@ -66,8 +66,8 @@ public class Automagical_BLUE3650 extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1100);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1100);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1500);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1500);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
@@ -89,16 +89,20 @@ public class Automagical_BLUE3650 extends LinearOpMode{
         Thread.sleep(1000);
         shooter.setPower(0);
 
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+300);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1300);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+400);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2000);
+        lDrive.setPower(.4);
+        rDrive.setPower(.4);
+
+        Thread.sleep(4500);
 
 
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-        lDrive.setPower(.5);
-        rDrive.setPower(.5);
+        lDrive.setPower(.2);
+        rDrive.setPower(.2);
 
         while(ods.getLightDetected() <= 0){
             continue;
@@ -113,35 +117,36 @@ public class Automagical_BLUE3650 extends LinearOpMode{
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-1200);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1200);
-        rDrive.setPower(.5);
-        lDrive.setPower(.5);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-1100);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+650);
+        rDrive.setPower(.3);
+        lDrive.setPower(.3);
         Thread.sleep(2000);
 
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        rDrive.setPower(.3);
-        lDrive.setPower(.3);
+        rDrive.setPower(.2);
+        lDrive.setPower(.2);
 
         while(light.getLightDetected() < lThresh){
             continue;
         }
         rDrive.setPower(0);
         lDrive.setPower(0);
+        Thread.sleep(2000);
 
-        if(colorSensor.red() > colorSensor.blue() && colorSensor.red() > 1){
+        if(colorSensor.red() > colorSensor.blue()){
             //hit button with servo
-            aftPush.setPosition(aftNeutral + .7);
-            Thread.sleep(1000);
+            aftPush.setPosition(aftNeutral - .4);
+            Thread.sleep(2500);
             //bring back servo
             aftPush.setPosition(aftNeutral);
         }
         else if(colorSensor.blue() >= colorSensor.red()){
             //hit button with other servo
-            forePush.setPosition(foreNeutral + .7);
-            Thread.sleep(1000);
+            forePush.setPosition(foreNeutral + .4);
+            Thread.sleep(2500);
             //bring servo back
             forePush.setPosition(foreNeutral);
         }
