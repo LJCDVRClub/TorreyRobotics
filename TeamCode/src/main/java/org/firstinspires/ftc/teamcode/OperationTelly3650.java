@@ -17,7 +17,7 @@ public class OperationTelly3650 extends OpMode {
 
     //assigning state variables
     DcMotor rDrive, lDrive, collector, shooter;
-    Servo forePush, aftPush;
+    Servo forePush, aftPush, ballServo;
     ColorSensor colorSensor;
     OpticalDistanceSensor ods;
     LightSensor light;
@@ -35,6 +35,7 @@ public class OperationTelly3650 extends OpMode {
         collector = hardwareMap.dcMotor.get("collector");
         shooter = hardwareMap.dcMotor.get("shooter");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        ballServo = hardwareMap.servo.get("ballServo");
 
         ods = hardwareMap.opticalDistanceSensor.get("ods");
         light = hardwareMap.lightSensor.get("light");
@@ -115,6 +116,13 @@ public class OperationTelly3650 extends OpMode {
         else {
             collector.setPower(0);
         }
+
+        /*if (gamepad2.dpad_up){//up
+            ballServo.setPosition(1.00);
+        }
+        else{//down
+            ballServo.setPosition(0.14);
+        }*/
 
         //shows values from color sensor on driver station phone
         telemetry.addData("Distance value",ods.getLightDetected());
