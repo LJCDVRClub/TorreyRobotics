@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Bryce on 11/14/2016.
  */
-@Autonomous(name = "Automagical: Blue", group = "3650")
+@Autonomous(name = "NO WORKY! Automagical: Blue", group = "3650")
 public class Automagical_BLUE3650 extends LinearOpMode{
 
     ColorSensor colorSensor;
