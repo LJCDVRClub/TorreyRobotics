@@ -29,8 +29,8 @@ public class AutoRedSimple3650 extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //move to shooting position
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1500);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1500);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1650);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1650);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
@@ -49,11 +49,11 @@ public class AutoRedSimple3650 extends LinearOpMode{
         //spin up collector
         collector.setPower(-1.00);
 
-        Thread.sleep(1000);
+        Thread.sleep(750);
         collector.setPower(0);
-        Thread.sleep(500);
+        Thread.sleep(1500);
         collector.setPower(-1.00);
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         //spin down motors
         collector.setPower(0);
@@ -62,8 +62,8 @@ public class AutoRedSimple3650 extends LinearOpMode{
         shooter.setPower(0);
 
         //do a 360
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-2500);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2500);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-1550);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1550);
         rDrive.setPower(.5);
         lDrive.setPower(.5);
         Thread.sleep(3500);
