@@ -29,8 +29,8 @@ public class AutoRedSimple3650 extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //move to shooting position
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1650);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1650);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1850);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1850);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
@@ -62,8 +62,8 @@ public class AutoRedSimple3650 extends LinearOpMode{
         shooter.setPower(0);
 
         //do a 360
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-1550);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1550);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-1600);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1600);
         rDrive.setPower(.5);
         lDrive.setPower(.5);
         Thread.sleep(3500);
@@ -71,8 +71,8 @@ public class AutoRedSimple3650 extends LinearOpMode{
         //ram the ball!!!! (and hopefully not the center post)
         rDrive.setPower(.4);
         lDrive.setPower(.4);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-2800);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()-2800);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-2500);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()-2500);
         Thread.sleep(5000);
 
 
