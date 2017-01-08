@@ -7,9 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/**
- * Created by Bryce on 12/2/2016.
- */
 @Autonomous(name="Automagical Blue (Simple)", group = "3650")
 public class AutoBlueSimple3650 extends LinearOpMode {
 

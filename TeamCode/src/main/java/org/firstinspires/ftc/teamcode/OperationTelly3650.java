@@ -9,9 +9,7 @@ import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/**
- * Created by Bryce on 11/2/2016.
- */
+
 @TeleOp(name="Operation: Telly", group="3650")
 public class OperationTelly3650 extends OpMode {
 

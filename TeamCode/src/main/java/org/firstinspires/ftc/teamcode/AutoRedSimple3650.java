@@ -6,9 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/**
- * Created by Bryce on 12/2/2016.
- */
+
 @Autonomous(name = "Automagical Red (Simple)", group = "3650")
 public class AutoRedSimple3650 extends LinearOpMode{
     DcMotor lDrive, rDrive, collector, shooter;
