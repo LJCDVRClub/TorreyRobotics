@@ -21,14 +21,18 @@ public class OpTellySingle3650 extends OpMode {
     //assigning state variables
     DcMotor rDrive, lDrive, collector, shooter;
     ColorSensor colorSensor;
+    Servo forePush, aftPush;
     OpticalDistanceSensor ods;
     LightSensor light;
+    double aftNeutral, foreNeutral;
 
 
 
 
     @Override
     public void init() {
+        aftNeutral = 1.00; //check these!!!
+        foreNeutral = .1;
 
         // linking variables to hardware components
         lDrive = hardwareMap.dcMotor.get("lDrive");
@@ -40,6 +44,10 @@ public class OpTellySingle3650 extends OpMode {
 
         ods = hardwareMap.opticalDistanceSensor.get("ods");
         light = hardwareMap.lightSensor.get("light");
+
+        //button pushing servos
+        forePush = hardwareMap.servo.get("forePush");
+        aftPush = hardwareMap.servo.get("aftPush");
 
         //Reversing direction of R Drive so it spins the correct way
         rDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -67,6 +75,19 @@ public class OpTellySingle3650 extends OpMode {
         }
         else {
             collector.setPower(0);
+        }
+
+        if(gamepad1.b){
+            //aftPush.setPosition(aftPush.getPosition()-.1);
+            forePush.setPosition(forePush.getPosition()+.1);
+        }
+        else if(gamepad1.x){
+            aftPush.setPosition(aftPush.getPosition()-.1);
+            //forePush.setPosition(forePush.getPosition()-.1);
+        }
+        else{
+            aftPush.setPosition(aftNeutral);
+            forePush.setPosition(foreNeutral);
         }
 
         //shows values from color sensor on driver station phone
