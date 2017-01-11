@@ -15,11 +15,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Automagical_RED3650 extends LinearOpMode{
 
     ColorSensor colorSensor;
-    OpticalDistanceSensor ods;
     LightSensor light;
     Servo forePush, aftPush;
     DcMotor lDrive, rDrive, collector, shooter;
-    double lThresh, dThresh, aftNeutral, foreNeutral;
+    double lThresh, aftNeutral, foreNeutral;
 
 
 
@@ -28,8 +27,7 @@ public class Automagical_RED3650 extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
 
         lThresh = 0.075; //anything higher is white
-        double perfectLight = .25; //check this!!  then replace it with lThresh
-        //dThresh = 0.0015; //needed distance for CS
+
 
         //rest positions for servos
         aftNeutral = 1.00;
@@ -45,15 +43,14 @@ public class Automagical_RED3650 extends LinearOpMode{
         shooter = hardwareMap.dcMotor.get("shooter");
 
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        ods = hardwareMap.opticalDistanceSensor.get("ods");
+
         colorSensor.enableLed(false);
         light = hardwareMap.lightSensor.get("light");
 
 
         lDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        //shooter.setDirection(DcMotor.Direction.REVERSE);
-
+        //set servos to rest position
         forePush.setPosition(foreNeutral);
         aftPush.setPosition(aftNeutral);
 
@@ -61,41 +58,44 @@ public class Automagical_RED3650 extends LinearOpMode{
 
         waitForStart(); //waits for start button to be pressed
 
+        //sets motors to run with encoder
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        //move to shooting position
         rDrive.setTargetPosition(rDrive.getCurrentPosition()+1400);
         lDrive.setTargetPosition(lDrive.getCurrentPosition()+1420);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
         //spin up shooter
-        //shooter.setPower(1.00);
+        shooter.setPower(1.00);
 
         Thread.sleep(2500);
 
+        //stop and start shooting
         lDrive.setPower(0);
         rDrive.setPower(0);
 
         //start shooting
-        //collector.setPower(-1.00);
+        collector.setPower(-1.00);
         Thread.sleep(1500);
 
         //wait for shooter to speed down
         collector.setPower(0);
-        //shooter.setPower(.4);
+        shooter.setPower(.4);
         Thread.sleep(1000);
         shooter.setPower(0);
 
+        //spin towards left wall
         lDrive.setTargetPosition(lDrive.getCurrentPosition()+300);
         rDrive.setTargetPosition(rDrive.getCurrentPosition()+2000);
         lDrive.setPower(.4);
         rDrive.setPower(.4);
 
-        Thread.sleep(3500);
+        Thread.sleep(4000);
 
-
-
+        //drive into wall (almost)
         lDrive.setTargetPosition(lDrive.getCurrentPosition()+2730);
         rDrive.setTargetPosition(rDrive.getCurrentPosition()+2730);
         lDrive.setPower(.35);
@@ -103,46 +103,52 @@ public class Automagical_RED3650 extends LinearOpMode{
 
         Thread.sleep(2750);
 
-
+        //spin right to be parallel with beacons
         rDrive.setTargetPosition(rDrive.getCurrentPosition()-1070);
         lDrive.setTargetPosition(lDrive.getCurrentPosition()+600);
         rDrive.setPower(.3);
         lDrive.setPower(.3);
         Thread.sleep(2000);
 
+        //sets motors back to normal mode
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        rDrive.setPower(.12);
-        lDrive.setPower(.12);
+        //drive slowly in order to detect white line
+        rDrive.setPower(.15);
+        lDrive.setPower(.15);
 
+        //while the line is not detected ...
         while(light.getLightDetected() < lThresh){
             continue;
         }
+        //stop once detected
         rDrive.setPower(0);
         lDrive.setPower(0);
-        Thread.sleep(1500);
+        Thread.sleep(1000);
 
+        //detect if red
         if(colorSensor.red() > colorSensor.blue()){
             //hit button with servo
             aftPush.setPosition(aftNeutral - .4);
-            Thread.sleep(2500);
+            Thread.sleep(2000);
             //bring back servo
             aftPush.setPosition(aftNeutral);
-        }
+        }//if not, use other servo
         else if(colorSensor.blue() >= colorSensor.red()){
             //hit button with other servo
             forePush.setPosition(foreNeutral + .4);
-            Thread.sleep(2500);
+            Thread.sleep(2000);
             //bring servo back
             forePush.setPosition(foreNeutral);
         }
         else{
             //run away
         }
-        Thread.sleep(1000);
 
 
+
+        //repeat
         rDrive.setPower(.15);
         lDrive.setPower(.15);
         Thread.sleep(500);
@@ -152,19 +158,19 @@ public class Automagical_RED3650 extends LinearOpMode{
         }
         rDrive.setPower(0);
         lDrive.setPower(0);
-        Thread.sleep(2000);
+        Thread.sleep(1000);
 
         if(colorSensor.red() > colorSensor.blue()){
             //hit button with servo
             aftPush.setPosition(aftNeutral - .4);
-            Thread.sleep(2500);
+            Thread.sleep(2000);
             //bring back servo
             aftPush.setPosition(aftNeutral);
         }
         else if(colorSensor.blue() >= colorSensor.red()){
             //hit button with other servo
             forePush.setPosition(foreNeutral + .4);
-            Thread.sleep(2500);
+            Thread.sleep(2000);
             //bring servo back
             forePush.setPosition(foreNeutral);
         }
@@ -173,8 +179,6 @@ public class Automagical_RED3650 extends LinearOpMode{
         }
         Thread.sleep(1000);
 
-        //check to see how much time is left
-        //if enough left, go for next beacon
 
 
 
