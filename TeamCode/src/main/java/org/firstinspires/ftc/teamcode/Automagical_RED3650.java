@@ -96,8 +96,8 @@ public class Automagical_RED3650 extends LinearOpMode{
         Thread.sleep(4000);
 
         //drive into wall (almost)
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2730);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2730);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2650);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2650);
         lDrive.setPower(.35);
         rDrive.setPower(.35);
 
