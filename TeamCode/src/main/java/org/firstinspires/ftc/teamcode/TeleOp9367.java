@@ -5,71 +5,108 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
 /**
- * Created by williamhuang on 14/12/16.
+ * Created by Bryce on 11/2/2016.
+ * Modified by Wenlong on 12/5/2016.
  */
+@TeleOp(name="TeleOp 01/07", group="9367")
+public class TeleOp9367 extends OpMode {
 
-
-
-@TeleOp(name="TeleOp 9367", group="9367")
-public class TeleOp9367 extends OpMode{
     //assigning state variables
-    DcMotor rfDrive, lfDrive, rrDrive, lrDrive;
+    DcMotor rDrive, lDrive, collector, shooter, elevator;
+    Servo ballServo;
+    //   ColorSensor colorSensor;
 
+    long setTime;
+    boolean trigger = true;
 
 
     @Override
     public void init() {
 
         // linking variables to hardware components
-        lfDrive = hardwareMap.dcMotor.get("lfDrive");
-        rfDrive = hardwareMap.dcMotor.get("rfDrive");
-        lrDrive = hardwareMap.dcMotor.get("lrDrive");
-        rrDrive = hardwareMap.dcMotor.get("rrDrive");
-
-
-
-
+        lDrive = hardwareMap.dcMotor.get("lDrive");
+        rDrive = hardwareMap.dcMotor.get("rDrive");
+        collector = hardwareMap.dcMotor.get("collector");
+        shooter = hardwareMap.dcMotor.get("shooter");
+        elevator = hardwareMap.dcMotor.get("elevator");
+        ballServo = hardwareMap.servo.get("ballServo");
 
     }
 
     @Override
     public void loop() {
 
-        if(gamepad1.dpad_left){
-            lfDrive.setPower(1.0);
-            lrDrive.setPower(-1.0);
-            rfDrive.setPower(-1.0);
-            rrDrive.setPower(1.0);
+        lDrive.setPower(-gamepad1.left_stick_y);
+        rDrive.setPower(gamepad1.right_stick_y);
+        //lDrive.setPower(-gamepad1.left_stick_y+0.5*gamepad1.left_stick_x);
+        //rDrive.setPower(gamepad1.left_stick_y+0.5*gamepad1.left_stick_x);
+
+
+
+        //set shooter
+        if(gamepad1.a) {
+
+            if (trigger) {
+                setTime = System.currentTimeMillis();
+                trigger = false;
+            }
+
+            else {
+                if (System.currentTimeMillis() - setTime > 350 && System.currentTimeMillis() - setTime < 450) {
+                    shooter.setPower(0);
+                }
+                else if (System.currentTimeMillis() - setTime > 450) {
+                    shooter.setPower(1.0);
+                }
+                else {
+                    shooter.setPower(-0.15);
+                }
+            }
+
         }
 
-        if(gamepad1.dpad_right){
-            lfDrive.setPower(-1.0);
-            lrDrive.setPower(1.0);
-            rfDrive.setPower(1.0);
-            rrDrive.setPower(-1.0);
+
+        else{
+            shooter.setPower(0);
+            trigger = true;
         }
 
-        if(gamepad1.dpad_up){
-            lfDrive.setPower(1.0);
-            lrDrive.setPower(1.0);
-            rfDrive.setPower(1.0);
-            rrDrive.setPower(1.0);
+
+        //set collector
+        if (gamepad2.right_bumper){//change to gamepad2 for competition
+            collector.setPower(-1.0);
+        }
+        else if(gamepad2.left_bumper){//change to gamepad2 for competition
+            collector.setPower(1.00);
+        }
+        else {
+            collector.setPower(0);
         }
 
-        if(gamepad1.dpad_down){
-            lfDrive.setPower(-1.0);
-            lrDrive.setPower(-1.0);
-            rfDrive.setPower(-1.0);
-            rrDrive.setPower(-1.0);
+        //set elevator
+        if(gamepad2.right_trigger == 1){//change to gamepad2 for competition
+            elevator.setPower(-1.00);
+        }
+        else if(gamepad2.left_trigger == 1){ //change to gamepad2 for competition
+            elevator.setPower(1.00);
+        }
+        else{
+            elevator.setPower(0);
         }
 
-        lfDrive.setPower(-gamepad1.left_stick_y+0.5*gamepad1.left_stick_x);
-        lrDrive.setPower(-gamepad1.left_stick_y+0.5*gamepad1.left_stick_x);
-        rfDrive.setPower(gamepad1.left_stick_y+0.5*gamepad1.left_stick_x);
-        rrDrive.setPower(gamepad1.left_stick_y+0.5*gamepad1.left_stick_x);
 
+        if(gamepad2.x){//change to gamepad2 for competition
+            ballServo.setPosition(0.15);
+        }
+        else{
+            ballServo.setPosition(0.57);
+        }
 
+        //shows values from color sensor on driver station phone
+        //  telemetry.addData("Red ", colorSensor.red());
+        //  telemetry.addData("Green ", colorSensor.green());
+        //  telemetry.addData("Blue ", colorSensor.blue());
     }
-
 }
