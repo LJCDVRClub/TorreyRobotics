@@ -26,7 +26,7 @@ public class Automagical_RED3650 extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        lThresh = 0.11; //anything higher is white
+        lThresh = 0.095; //anything higher is white
 
 
         //rest positions for servos
@@ -69,7 +69,7 @@ public class Automagical_RED3650 extends LinearOpMode{
         lDrive.setPower(.4);
 
         //spin up shooter
-        shooter.setPower(1.00);
+       // shooter.setPower(1.00);
 
         Thread.sleep(2500);
 
@@ -83,21 +83,21 @@ public class Automagical_RED3650 extends LinearOpMode{
 
         //wait for shooter to speed down
         collector.setPower(0);
-        shooter.setPower(.4);
+       // shooter.setPower(.4);
         Thread.sleep(1000);
         shooter.setPower(0);
 
         //spin towards left wall
         lDrive.setTargetPosition(lDrive.getCurrentPosition()+700);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2450);
-        lDrive.setPower(.4);
-        rDrive.setPower(.4);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2500);
+        lDrive.setPower(.5);
+        rDrive.setPower(.5);
 
         Thread.sleep(4000);
 
         //drive into wall (almost)
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2650);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2650);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2610);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2610);
         lDrive.setPower(.35);
         rDrive.setPower(.35);
 
@@ -105,7 +105,7 @@ public class Automagical_RED3650 extends LinearOpMode{
 
         //spin right to be parallel with beacons
         rDrive.setTargetPosition(rDrive.getCurrentPosition()-1070);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+690);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+805);
         rDrive.setPower(.3);
         lDrive.setPower(.3);
         Thread.sleep(2000);
@@ -116,7 +116,7 @@ public class Automagical_RED3650 extends LinearOpMode{
 
         //drive slowly in order to detect white line
         rDrive.setPower(.15);
-        lDrive.setPower(.16);
+        lDrive.setPower(.15);
 
         //while the line is not detected ...
         while(light.getLightDetected() < lThresh){
