@@ -30,8 +30,8 @@ public class Automagical_RED3650 extends LinearOpMode{
 
 
         //rest positions for servos
-        aftNeutral = 1.00;
-        foreNeutral = .1;
+        aftNeutral = 0;
+        foreNeutral = 1;
 
         //button pushing servos
         forePush = hardwareMap.servo.get("forePush");
@@ -69,7 +69,7 @@ public class Automagical_RED3650 extends LinearOpMode{
         lDrive.setPower(.4);
 
         //spin up shooter
-       // shooter.setPower(1.00);
+        shooter.setPower(1.00);
 
         Thread.sleep(2500);
 
@@ -83,29 +83,41 @@ public class Automagical_RED3650 extends LinearOpMode{
 
         //wait for shooter to speed down
         collector.setPower(0);
-       // shooter.setPower(.4);
+        shooter.setPower(.4);
         Thread.sleep(1000);
         shooter.setPower(0);
 
+        rDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin towards left wall
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+700);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+720);
         rDrive.setTargetPosition(rDrive.getCurrentPosition()+2500);
-        lDrive.setPower(.5);
-        rDrive.setPower(.5);
+        lDrive.setPower(.4);
+        rDrive.setPower(.4);
 
         Thread.sleep(4000);
 
+        rDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //drive into wall (almost)
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2610);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2610);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2650);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2650);
         lDrive.setPower(.35);
         rDrive.setPower(.35);
 
         Thread.sleep(2750);
 
+        rDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin right to be parallel with beacons
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-1070);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+805);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-930);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+770);
         rDrive.setPower(.3);
         lDrive.setPower(.3);
         Thread.sleep(2000);
@@ -130,15 +142,15 @@ public class Automagical_RED3650 extends LinearOpMode{
         //detect if red
         if(colorSensor.red() > colorSensor.blue()){
             //hit button with servo
-            aftPush.setPosition(aftNeutral - .4);
-            Thread.sleep(2000);
+            aftPush.setPosition(1.0);
+            Thread.sleep(1500);
             //bring back servo
             aftPush.setPosition(aftNeutral);
         }//if not, use other servo
         else if(colorSensor.blue() >= colorSensor.red()){
             //hit button with other servo
-            forePush.setPosition(foreNeutral + .4);
-            Thread.sleep(2000);
+            forePush.setPosition(0);
+            Thread.sleep(1500);
             //bring servo back
             forePush.setPosition(foreNeutral);
         }
@@ -162,15 +174,15 @@ public class Automagical_RED3650 extends LinearOpMode{
 
         if(colorSensor.red() > colorSensor.blue()){
             //hit button with servo
-            aftPush.setPosition(aftNeutral - .4);
-            Thread.sleep(2000);
+            aftPush.setPosition(1.0);
+            Thread.sleep(1500);
             //bring back servo
             aftPush.setPosition(aftNeutral);
         }
         else if(colorSensor.blue() >= colorSensor.red()){
             //hit button with other servo
-            forePush.setPosition(foreNeutral + .4);
-            Thread.sleep(2000);
+            forePush.setPosition(0);
+            Thread.sleep(1500);
             //bring servo back
             forePush.setPosition(foreNeutral);
         }
