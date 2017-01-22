@@ -92,8 +92,8 @@ public class Automagical_RED3650 extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin towards left wall
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+720);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2500);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+800);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2580);
         lDrive.setPower(.4);
         rDrive.setPower(.4);
 
