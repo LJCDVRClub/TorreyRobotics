@@ -26,7 +26,7 @@ public class Automagical_BLUE3650 extends LinearOpMode {
 
 
         //rest positions for servos
-        aftNeutral = 0;
+        aftNeutral = .1;
         foreNeutral = 1;
 
         //button pushing servos
@@ -58,8 +58,8 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //move to shooting position
-        rDrive.setTargetPosition(rDrive.getCurrentPosition() + 1000);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition() + 1020);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition() + 1400);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition() + 1420);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
@@ -87,8 +87,8 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin towards right wall
-        lDrive.setTargetPosition(lDrive.getCurrentPosition() + 820);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition() + 2600);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition() + 420);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition() + 2100);
         lDrive.setPower(.4);
         rDrive.setPower(.4);
 

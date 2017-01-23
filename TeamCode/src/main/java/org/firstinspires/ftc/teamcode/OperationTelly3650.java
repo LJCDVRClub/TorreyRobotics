@@ -39,7 +39,7 @@ public class OperationTelly3650 extends OpMode {
         light = hardwareMap.lightSensor.get("light");
 
         //rest positions for servos
-        aftNeutral = 0; //1.0 is max
+        aftNeutral = .2; //1.0 is max
         foreNeutral = 1.0; //0 is max
 
         //button pushing servos
