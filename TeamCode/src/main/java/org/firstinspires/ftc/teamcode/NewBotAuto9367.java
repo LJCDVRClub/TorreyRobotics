@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -61,7 +61,7 @@ public class NewBotAuto9367 extends LinearOpMode {
         ShootBall(releaseOneBall);
 
         Thread.sleep(500);
-*/
+
 
         //test encoders for spinning
         double[] clockwise = {0, 0, 0, 0};
@@ -440,7 +440,7 @@ public class NewBotAuto9367 extends LinearOpMode {
         }
 
     }
-*/
+
 
     void startToMove(double flPower, double frPower, double rlPower, double rrPower, int flDriveMovement, int frDriveMovement, int rlDriveMovement, int rrDriveMovement){
         flDrive.setTargetPosition(flDriveMovement);
@@ -698,4 +698,4 @@ public class NewBotAuto9367 extends LinearOpMode {
 
     }
 
-}
+}*/

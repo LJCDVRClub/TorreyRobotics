@@ -27,8 +27,8 @@ public class AutoBlueSimple3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //move to shooting position
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2000);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2000);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1700);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1700);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
@@ -65,8 +65,8 @@ public class AutoBlueSimple3650 extends LinearOpMode {
         //ram the ball!!!! (and hopefully not the center post)
         rDrive.setPower(.4);
         lDrive.setPower(.4);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-2500);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()-2500);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-2700);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()-2700);
         Thread.sleep(5000);
 
 
