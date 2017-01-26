@@ -58,8 +58,9 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //move to shooting position
-        rDrive.setTargetPosition(rDrive.getCurrentPosition() + 1200);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition() + 1220);
+
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1200);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1220);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
@@ -87,8 +88,8 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin towards right wall
-        lDrive.setTargetPosition(lDrive.getCurrentPosition() + 620);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition() + 2300);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+600);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2580);
         lDrive.setPower(.4);
         rDrive.setPower(.4);
 
@@ -99,8 +100,8 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //drive into wall (almost)
-        lDrive.setTargetPosition(lDrive.getCurrentPosition() - 3000);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition() - 3000);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2500);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2500);
         lDrive.setPower(.35);
         rDrive.setPower(.35);
 
@@ -111,8 +112,8 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin right to be parallel with beacons
-        rDrive.setTargetPosition(rDrive.getCurrentPosition() + 930);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition() - 770);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition() - 1000);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition() + 870);
         rDrive.setPower(.3);
         lDrive.setPower(.3);
         Thread.sleep(2000);
