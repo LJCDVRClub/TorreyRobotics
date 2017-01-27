@@ -100,10 +100,10 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //drive into wall (almost)
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2500);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2520);
         rDrive.setTargetPosition(rDrive.getCurrentPosition()+2500);
-        lDrive.setPower(.35);
-        rDrive.setPower(.35);
+        rDrive.setPower(.4);
+        lDrive.setPower(.4);
 
         Thread.sleep(2750);
 
@@ -112,7 +112,7 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin right to be parallel with beacons
-        rDrive.setTargetPosition(rDrive.getCurrentPosition() - 1000);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition() - 1070);
         lDrive.setTargetPosition(lDrive.getCurrentPosition() + 870);
         rDrive.setPower(.3);
         lDrive.setPower(.3);
@@ -123,8 +123,8 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //drive slowly in order to detect white line
-        rDrive.setPower(-.17);
-        lDrive.setPower(-.17);
+        rDrive.setPower(-.15);
+        lDrive.setPower(-.15);
 
         //while the line is not detected ...
         while (light.getLightDetected() < lThresh) {
@@ -155,8 +155,8 @@ public class Automagical_BLUE3650 extends LinearOpMode {
 
 
         //repeat
-        rDrive.setPower(-.17);
-        lDrive.setPower(-.17);
+        rDrive.setPower(-.15);
+        lDrive.setPower(-.15);
         Thread.sleep(1500);
 
         while (light.getLightDetected() < lThresh) {
