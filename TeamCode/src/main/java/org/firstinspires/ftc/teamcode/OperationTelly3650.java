@@ -52,6 +52,7 @@ public class OperationTelly3650 extends OpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         colorSensor.enableLed(false);
+        //sets beacon pushers to rest position
         forePush.setPosition(foreNeutral);
         aftPush.setPosition(aftNeutral);
 
@@ -64,6 +65,7 @@ public class OperationTelly3650 extends OpMode {
         lDrive.setPower(gamepad1.left_stick_y*.7);
         rDrive.setPower(gamepad1.right_stick_y*.7);
 
+        //code for beacon pushers
         if(gamepad1.right_bumper){
             forePush.setPosition(0);
         }
@@ -75,7 +77,7 @@ public class OperationTelly3650 extends OpMode {
             forePush.setPosition(foreNeutral);
         }
 
-
+        //shooter code
         if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
             shooter.setPower(-1.0);
         }
@@ -102,7 +104,7 @@ public class OperationTelly3650 extends OpMode {
 
 
 
-
+        //collector controls
         if (gamepad2.left_bumper){
             collector.setPower(-1.0);
         }
@@ -120,7 +122,7 @@ public class OperationTelly3650 extends OpMode {
             ballServo.setPosition(0.14);
         }*/
 
-        //shows values from color sensor on driver station phone
+        //values to be shown on the driver station
         telemetry.addData("Distance value",ods.getLightDetected());
         telemetry.addData("Light", light.getLightDetected());
         telemetry.addData("Red ", colorSensor.red());
