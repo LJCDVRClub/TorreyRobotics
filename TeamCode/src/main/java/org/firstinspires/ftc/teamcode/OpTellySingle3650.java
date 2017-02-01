@@ -31,8 +31,8 @@ public class OpTellySingle3650 extends OpMode {
 
     @Override
     public void init() {
-        aftNeutral = .1; //check these!!!
-        foreNeutral = 0;
+        aftNeutral = .2; //1.0 is max
+        foreNeutral = 1.0; //0 is max
 
         // linking variables to hardware components
         lDrive = hardwareMap.dcMotor.get("lDrive");
@@ -77,13 +77,12 @@ public class OpTellySingle3650 extends OpMode {
             collector.setPower(0);
         }
 
+
         if(gamepad1.b){
-            //aftPush.setPosition(aftPush.getPosition()-.1);
-            forePush.setPosition(forePush.getPosition()-.1);
+            forePush.setPosition(0);
         }
         else if(gamepad1.x){
-            aftPush.setPosition(aftPush.getPosition()+.1);
-            //forePush.setPosition(forePush.getPosition()-.1);
+            aftPush.setPosition(1.00);
         }
         else{
             aftPush.setPosition(aftNeutral);

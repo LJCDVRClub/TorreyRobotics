@@ -127,8 +127,8 @@ public class Automagical_RED3650 extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //drive slowly in order to detect white line
-        rDrive.setPower(.15);
-        lDrive.setPower(.15);
+        rDrive.setPower(.14);
+        lDrive.setPower(.14);
 
         //while the line is not detected ...
         while(light.getLightDetected() < lThresh){
@@ -161,8 +161,8 @@ public class Automagical_RED3650 extends LinearOpMode{
 
 
         //repeat
-        rDrive.setPower(.15);
-        lDrive.setPower(.15);
+        rDrive.setPower(.14);
+        lDrive.setPower(.14);
         Thread.sleep(1500);
 
         while(light.getLightDetected() < lThresh){
