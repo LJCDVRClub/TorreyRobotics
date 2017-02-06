@@ -26,7 +26,7 @@ public class Automagical_RED3650 extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        lThresh = 0.095; //anything higher is white
+        lThresh = 0.08; //anything higher is white
 
 
         //rest positions for servos
@@ -104,8 +104,8 @@ public class Automagical_RED3650 extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //drive into wall (almost)
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2650);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2650);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2750);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2750);
         lDrive.setPower(.35);
         rDrive.setPower(.35);
 
@@ -163,9 +163,9 @@ public class Automagical_RED3650 extends LinearOpMode{
         //repeat
         rDrive.setPower(.13);
         lDrive.setPower(.13);
-        Thread.sleep(1500);
+        Thread.sleep(3000);
 
-        while(light.getLightDetected() < lThresh){
+        while(light.getLightDetected() < .1){
             continue;
         }
         rDrive.setPower(0);

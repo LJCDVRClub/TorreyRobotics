@@ -100,8 +100,8 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //drive into wall (almost)
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2520);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2400);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2620);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2500);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
