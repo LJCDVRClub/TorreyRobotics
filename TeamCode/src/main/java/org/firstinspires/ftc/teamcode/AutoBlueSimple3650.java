@@ -55,9 +55,9 @@ public class AutoBlueSimple3650 extends LinearOpMode {
         Thread.sleep(2000);
         shooter.setPower(0);
 
-        //do a 360
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()-1600);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1600);
+        //do a 180
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()-2600);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2600);
         rDrive.setPower(.5);
         lDrive.setPower(.5);
         Thread.sleep(3500);
