@@ -60,8 +60,8 @@ public class AutoRedSimple3650 extends LinearOpMode{
         shooter.setPower(0);
 
         //do a 180
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-2600);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2600);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-1900);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1900);
         rDrive.setPower(.5);
         lDrive.setPower(.5);
         Thread.sleep(3500);
