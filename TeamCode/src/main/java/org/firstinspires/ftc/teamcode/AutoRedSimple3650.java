@@ -66,7 +66,7 @@ public class AutoRedSimple3650 extends LinearOpMode{
         lDrive.setPower(.5);
         Thread.sleep(3500);
 
-        //ram the ball!!!! (and hopefully not the center post)
+        //ram the ball and park
         rDrive.setPower(.4);
         lDrive.setPower(.4);
         rDrive.setTargetPosition(rDrive.getCurrentPosition()-2700);
