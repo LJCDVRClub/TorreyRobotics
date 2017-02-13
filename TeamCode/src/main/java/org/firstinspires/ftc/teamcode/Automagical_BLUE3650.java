@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * Created by Bryce on 1/20/2017.
@@ -14,6 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Automagical_BLUE3650 extends LinearOpMode {
     ColorSensor colorSensor;
     LightSensor light;
+    TouchSensor rTouch, lTouch;
     Servo forePush, aftPush;
     DcMotor lDrive, rDrive, collector, shooter;
     double lThresh, aftNeutral, foreNeutral;
@@ -42,6 +44,9 @@ public class Automagical_BLUE3650 extends LinearOpMode {
 
         colorSensor.enableLed(false);
         light = hardwareMap.lightSensor.get("light");
+
+        lTouch = hardwareMap.touchSensor.get("lTouch");
+        rTouch = hardwareMap.touchSensor.get("rTouch");
 
 
         lDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -88,8 +93,8 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin towards right wall
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+600);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2580);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+600);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2580);
         lDrive.setPower(.4);
         rDrive.setPower(.4);
 
@@ -100,20 +105,38 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //drive into wall (almost)
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2620);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2500);
-        rDrive.setPower(.4);
-        lDrive.setPower(.4);
+        lDrive.setPower(.25);
+        rDrive.setPower(.25);
+        while(!rTouch.isPressed() && !lTouch.isPressed()){
+            if(rTouch.isPressed()){
+                rDrive.setPower(0);
+            }
+            else if(lTouch.isPressed()){
+                lDrive.setPower(0);
+            }
+        }
+        lDrive.setPower(0);
+        rDrive.setPower(0);
 
-        Thread.sleep(2750);
+        Thread.sleep(500);
+
+        rDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-600);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()-600);
+
+        Thread.sleep(1000);
 
         rDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin right to be parallel with beacons
-        rDrive.setTargetPosition(rDrive.getCurrentPosition() - 1000);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition() + 800);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition() - 1000);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition() + 800);
         rDrive.setPower(.3);
         lDrive.setPower(.3);
         Thread.sleep(2000);

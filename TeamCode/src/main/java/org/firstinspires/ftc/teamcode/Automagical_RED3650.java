@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
 @Autonomous(name = "Automagical: RED", group = "3650")
@@ -16,6 +16,7 @@ public class Automagical_RED3650 extends LinearOpMode{
 
     ColorSensor colorSensor;
     LightSensor light;
+    TouchSensor lTouch, rTouch;
     Servo forePush, aftPush;
     DcMotor lDrive, rDrive, collector, shooter;
     double lThresh, aftNeutral, foreNeutral;
@@ -47,6 +48,8 @@ public class Automagical_RED3650 extends LinearOpMode{
         colorSensor.enableLed(false);
         light = hardwareMap.lightSensor.get("light");
 
+        lTouch = hardwareMap.touchSensor.get("lTouch");
+        rTouch = hardwareMap.touchSensor.get("rTouch");
 
         lDrive.setDirection(DcMotor.Direction.REVERSE);
 
@@ -99,17 +102,33 @@ public class Automagical_RED3650 extends LinearOpMode{
 
         Thread.sleep(4000);
 
+        lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //drive into wall (almost)
+        lDrive.setPower(.25);
+        rDrive.setPower(.25);
+        while(!rTouch.isPressed() && !lTouch.isPressed()){
+            if(rTouch.isPressed()){
+                rDrive.setPower(0);
+            }
+            else if(lTouch.isPressed()){
+                lDrive.setPower(0);
+            }
+        }
+        lDrive.setPower(0);
+        rDrive.setPower(0);
+
+        Thread.sleep(500);
+
         rDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //drive into wall (almost)
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+2750);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2750);
-        lDrive.setPower(.35);
-        rDrive.setPower(.35);
 
-        Thread.sleep(2750);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-600);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()-600);
+
+        Thread.sleep(1000);
 
         rDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
