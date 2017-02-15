@@ -107,13 +107,14 @@ public class Automagical_RED3650 extends LinearOpMode{
         //drive into wall (almost)
         lDrive.setPower(.25);
         rDrive.setPower(.25);
-        while(!rTouch.isPressed() && !lTouch.isPressed()){
+        while(!(rTouch.isPressed()) || !(lTouch.isPressed())){
             if(rTouch.isPressed()){
                 rDrive.setPower(0);
             }
             else if(lTouch.isPressed()){
                 lDrive.setPower(0);
             }
+
         }
         lDrive.setPower(0);
         rDrive.setPower(0);
@@ -125,18 +126,20 @@ public class Automagical_RED3650 extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-600);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()-600);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-480);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()-480);
+        rDrive.setPower(.3);
+        lDrive.setPower(.3);
 
-        Thread.sleep(1000);
+        Thread.sleep(2500);
 
         rDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin right to be parallel with beacons
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-930);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+770);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-970);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+900);
         rDrive.setPower(.3);
         lDrive.setPower(.3);
         Thread.sleep(2000);
