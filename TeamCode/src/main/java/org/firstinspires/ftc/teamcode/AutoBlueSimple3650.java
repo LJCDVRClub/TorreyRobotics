@@ -37,7 +37,7 @@ public class AutoBlueSimple3650 extends LinearOpMode {
 
         //start spinning up shooter
 
-        shooter.setPower(1.00);
+        shooter.setPower(.9);
         Thread.sleep(3300);
         lDrive.setPower(0);
         rDrive.setPower(0);

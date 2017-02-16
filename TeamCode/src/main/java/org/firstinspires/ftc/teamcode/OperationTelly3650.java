@@ -82,7 +82,7 @@ public class OperationTelly3650 extends OpMode {
             shooter.setPower(-1.0);
         }
         else if (!gamepad2.dpad_down && gamepad2.right_trigger > 0){
-            shooter.setPower(gamepad2.right_trigger);
+            shooter.setPower(gamepad2.right_trigger*.9);
         }
         else{
             shooter.setPower(0);

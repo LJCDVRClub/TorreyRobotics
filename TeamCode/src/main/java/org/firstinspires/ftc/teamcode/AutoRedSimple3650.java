@@ -37,7 +37,7 @@ public class AutoRedSimple3650 extends LinearOpMode{
 
         //start spinning up shooter
 
-        shooter.setPower(1.00);
+        shooter.setPower(.9);
         //sleep (wait) so it can finish moving
         Thread.sleep(3300);
 

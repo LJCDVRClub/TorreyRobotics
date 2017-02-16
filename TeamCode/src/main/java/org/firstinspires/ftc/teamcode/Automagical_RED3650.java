@@ -72,9 +72,9 @@ public class Automagical_RED3650 extends LinearOpMode{
         lDrive.setPower(.4);
 
         //spin up shooter
-        shooter.setPower(1.00);
+        shooter.setPower(.9);
 
-        Thread.sleep(2500);
+        Thread.sleep(1500);
 
         //stop and start shooting
         lDrive.setPower(0);
@@ -100,13 +100,13 @@ public class Automagical_RED3650 extends LinearOpMode{
         lDrive.setPower(.4);
         rDrive.setPower(.4);
 
-        Thread.sleep(4000);
+        Thread.sleep(3000);
 
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //drive into wall (almost)
-        lDrive.setPower(.25);
-        rDrive.setPower(.25);
+        //drive into wall
+        lDrive.setPower(.2);
+        rDrive.setPower(.2);
         while(!(rTouch.isPressed()) || !(lTouch.isPressed())){
             if(rTouch.isPressed()){
                 rDrive.setPower(0);
@@ -128,10 +128,10 @@ public class Automagical_RED3650 extends LinearOpMode{
 
         rDrive.setTargetPosition(rDrive.getCurrentPosition()-480);
         lDrive.setTargetPosition(lDrive.getCurrentPosition()-480);
-        rDrive.setPower(.3);
-        lDrive.setPower(.3);
+        rDrive.setPower(.4);
+        lDrive.setPower(.4);
 
-        Thread.sleep(2500);
+        Thread.sleep(2000);
 
         rDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -149,8 +149,8 @@ public class Automagical_RED3650 extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //drive slowly in order to detect white line
-        rDrive.setPower(.13);
-        lDrive.setPower(.13);
+        rDrive.setPower(.16);
+        lDrive.setPower(.16);
 
         //while the line is not detected ...
         while(light.getLightDetected() < lThresh){
@@ -183,8 +183,8 @@ public class Automagical_RED3650 extends LinearOpMode{
 
 
         //repeat
-        rDrive.setPower(.13);
-        lDrive.setPower(.13);
+        rDrive.setPower(.16);
+        lDrive.setPower(.16);
         Thread.sleep(3000);
 
         while(light.getLightDetected() < .1){

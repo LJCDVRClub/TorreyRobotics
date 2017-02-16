@@ -33,7 +33,7 @@ public class AutoShoot3650 extends LinearOpMode {
         lDrive.setPower(.4);
 
         //spin up shooter
-        shooter.setPower(1.00);
+        shooter.setPower(.9);
 
         Thread.sleep(2500);
 
