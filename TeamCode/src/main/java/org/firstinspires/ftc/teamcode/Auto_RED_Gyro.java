@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
-@Autonomous(name = "Automagical: RED", group = "3650")
+@Autonomous(name = "Automagical: REDG", group = "3650")
 public class Auto_RED_Gyro extends LinearOpMode{
 
     ColorSensor colorSensor;
