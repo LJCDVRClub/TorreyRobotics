@@ -20,8 +20,11 @@ public class Auto_RED_Gyro extends LinearOpMode{
     Servo forePush, aftPush;
     DcMotor lDrive, rDrive, collector, shooter;
     double lThresh, aftNeutral, foreNeutral;
+    double initialHeading;
 
 
+
+    IMU_class imu = new IMU_class("imu", hardwareMap);
 
 
     @Override
@@ -57,6 +60,7 @@ public class Auto_RED_Gyro extends LinearOpMode{
         forePush.setPosition(foreNeutral);
         aftPush.setPosition(aftNeutral);
 
+        initialHeading = getHeading(imu);
 
 
         waitForStart(); //waits for start button to be pressed
@@ -144,11 +148,9 @@ public class Auto_RED_Gyro extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        initialHeading = getHeading(imu);
         //spin right to be parallel with beacons
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-970);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+900);
-        rDrive.setPower(.3);
-        lDrive.setPower(.3);
+        turnToAngle(90, imu);
         Thread.sleep(2000);
 
         //sets motors back to normal mode
@@ -224,5 +226,34 @@ public class Auto_RED_Gyro extends LinearOpMode{
 
 
 
+    }
+
+    void turnToAngle(double target, IMU_class imu){
+        lDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double converted_target;
+        initialHeading = getHeading(imu);
+        converted_target= initialHeading + target;
+        double turnError;
+        while(Math.abs(getHeading(imu) - converted_target) > 2) {
+            turnError = getHeading(imu) - converted_target;
+            if(Math.abs(turnError) > 30){
+                lDrive.setPower(0.3);
+                rDrive.setPower(-0.3);
+            }
+            else{
+                lDrive.setPower(0.08 + turnError/30 * 0.22);
+                rDrive.setPower(-(0.08 + turnError/30 * 0.22));
+            }
+            telemetry.addData("Degrees to target", Math.abs(converted_target - getHeading(imu)));
+            telemetry.update();
+        }
+        lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+    }
+
+    double getHeading(IMU_class a){
+        return a.getAngles()[0];
     }
 }
