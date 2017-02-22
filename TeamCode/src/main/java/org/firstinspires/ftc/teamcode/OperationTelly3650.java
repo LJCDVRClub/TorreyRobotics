@@ -13,13 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name="Operation: Telly", group="3650")
 public class OperationTelly3650 extends OpMode {
 
-    //assigning state variables
-    DcMotor rDrive, lDrive, collector, shooter;
-    Servo forePush, aftPush, ballServo;
-    ColorSensor colorSensor;
-    OpticalDistanceSensor ods;
-    LightSensor light;
-    double aftNeutral, foreNeutral;
+    Hardware_3650 hw =new Hardware_3650(hardwareMap);
+
 
 
 
@@ -27,34 +22,9 @@ public class OperationTelly3650 extends OpMode {
     @Override
     public void init() {
 
-        // linking variables to hardware components
-        lDrive = hardwareMap.dcMotor.get("lDrive");
-        rDrive = hardwareMap.dcMotor.get("rDrive");
-        collector = hardwareMap.dcMotor.get("collector");
-        shooter = hardwareMap.dcMotor.get("shooter");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        ballServo = hardwareMap.servo.get("ballServo");
+        hw.rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hw.lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        ods = hardwareMap.opticalDistanceSensor.get("ods");
-        light = hardwareMap.lightSensor.get("light");
-
-        //rest positions for servos
-        aftNeutral = .2; //1.0 is max
-        foreNeutral = 1.0; //0 is max
-
-        //button pushing servos
-        forePush = hardwareMap.servo.get("forePush");
-        aftPush = hardwareMap.servo.get("aftPush");
-
-        //Reversing direction of R Drive so it spins the correct way
-        rDrive.setDirection(DcMotor.Direction.REVERSE);
-        rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        colorSensor.enableLed(false);
-        //sets beacon pushers to rest position
-        forePush.setPosition(foreNeutral);
-        aftPush.setPosition(aftNeutral);
 
     }
 
@@ -62,73 +32,54 @@ public class OperationTelly3650 extends OpMode {
     public void loop() {
 
         //set motor controls to joystick
-        lDrive.setPower(gamepad1.left_stick_y*.7);
-        rDrive.setPower(gamepad1.right_stick_y*.7);
+        hw.lDrive.setPower(-(gamepad1.left_stick_y*.7));
+        hw.rDrive.setPower(-(gamepad1.right_stick_y*.7));
 
         //code for beacon pushers
         if(gamepad1.right_bumper){
-            forePush.setPosition(0);
+            hw.forePush.setPosition(0);
         }
         else if(gamepad1.left_bumper){
-            aftPush.setPosition(1.00);
+            hw.aftPush.setPosition(1.00);
         }
         else{
-            aftPush.setPosition(aftNeutral);
-            forePush.setPosition(foreNeutral);
+            hw.aftPush.setPosition(hw.aftNeutral);
+            hw.forePush.setPosition(hw.foreNeutral);
         }
 
         //shooter code
         if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
-            shooter.setPower(-1.0);
+            hw.shooter.setPower(-1.0);
         }
         else if (!gamepad2.dpad_down && gamepad2.right_trigger > 0){
-            shooter.setPower(gamepad2.right_trigger*.9);
+            hw.shooter.setPower(gamepad2.right_trigger*.9);
         }
         else{
-            shooter.setPower(0);
+            hw.shooter.setPower(0);
         }
 
 
-        //not sure which one works, so commenting this out for now
-
-        /*
-        if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
-            shooter.setPower(-1.0);
-        }
-        else if (!gamepad2.dpad_down && gamepad2.right_trigger == 1){
-            shooter.setPower(1.0);
-        }
-        else{
-            shooter.setPower(0);
-        }*/
 
 
 
         //collector controls
         if (gamepad2.left_bumper){
-            collector.setPower(-1.0);
+            hw.collector.setPower(-1.0);
         }
         else if(gamepad2.right_bumper){
-            collector.setPower(1.00);
+            hw.collector.setPower(1.00);
         }
         else {
-            collector.setPower(0);
+            hw.collector.setPower(0);
         }
 
-        /*if (gamepad2.dpad_up){//up
-            ballServo.setPosition(1.00);
-        }
-        else{//down
-            ballServo.setPosition(0.14);
-        }*/
 
         //values to be shown on the driver station
-        telemetry.addData("Distance value",ods.getLightDetected());
-        telemetry.addData("Light", light.getLightDetected());
-        telemetry.addData("Red ", colorSensor.red());
-        telemetry.addData("Green ", colorSensor.green());
-        telemetry.addData("Blue ", colorSensor.blue());
-        telemetry.addData("Aft ", aftPush.getPosition());
-        telemetry.addData("Fore ", forePush.getPosition());
+        telemetry.addData("Light", hw.light.getLightDetected());
+        telemetry.addData("Red ", hw.colorSensor.red());
+        telemetry.addData("Green ", hw.colorSensor.green());
+        telemetry.addData("Blue ", hw.colorSensor.blue());
+        telemetry.addData("Aft ", hw.aftPush.getPosition());
+        telemetry.addData("Fore ", hw.forePush.getPosition());
     }
 }

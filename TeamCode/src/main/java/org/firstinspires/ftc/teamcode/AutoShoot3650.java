@@ -9,55 +9,45 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Autonomous(name = "Automagically Shoot", group = "3650")
 public class AutoShoot3650 extends LinearOpMode {
 
-    DcMotor rDrive, lDrive, shooter, collector;
+    Hardware_3650 hw = new Hardware_3650(hardwareMap);
 
     @Override
     public void runOpMode() throws InterruptedException {
-        lDrive = hardwareMap.dcMotor.get("lDrive");
-        rDrive = hardwareMap.dcMotor.get("rDrive");
-
-        collector = hardwareMap.dcMotor.get("collector");
-        shooter = hardwareMap.dcMotor.get("shooter");
-
-        lDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        
         waitForStart(); //wait for start button
 
         //move up to firing position
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1250);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1250);
-        rDrive.setPower(.4);
-        lDrive.setPower(.4);
+        hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition()+1250);
+        hw.lDrive.setTargetPosition(hw.lDrive.getCurrentPosition()+1250);
+        hw.rDrive.setPower(.4);
+        hw.lDrive.setPower(.4);
 
         //spin up shooter
-        shooter.setPower(.9);
+        hw.shooter.setPower(.9);
 
         Thread.sleep(2500);
 
-        lDrive.setPower(0);
-        rDrive.setPower(0);
+        hw.lDrive.setPower(0);
+        hw.rDrive.setPower(0);
 
         //start shooting
-        collector.setPower(-1.00);
+        hw.collector.setPower(-1.00);
         Thread.sleep(1000);
 
         //wait for shooter to speed up again
-        collector.setPower(0);
+        hw.collector.setPower(0);
         Thread.sleep(750);
 
         //fire second ball
-        collector.setPower(-1.00);
+        hw.collector.setPower(-1.00);
         Thread.sleep(1000);
 
         //stop collector, spin down shooter
-        collector.setPower(0);
-        shooter.setPower(.4);
+        hw.collector.setPower(0);
+        hw.shooter.setPower(.4);
         Thread.sleep(2000);
 
-        shooter.setPower(0);
+        hw.shooter.setPower(0);
 
     }
 }

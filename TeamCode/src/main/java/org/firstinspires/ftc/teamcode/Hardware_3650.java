@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  * Created by bryce on 2/22/17.
  */
 
-public class Hardware {
+public class Hardware_3650 {
     ColorSensor colorSensor;
     LightSensor light;
     TouchSensor lTouch, rTouch;
@@ -19,7 +19,7 @@ public class Hardware {
     DcMotor lDrive, rDrive, collector, shooter;
     double lThresh, aftNeutral, foreNeutral;
 
-    public Hardware(HardwareMap hardwareMap){
+    public Hardware_3650(HardwareMap hardwareMap){
         lThresh = 0.08; //anything higher is white
 
 
