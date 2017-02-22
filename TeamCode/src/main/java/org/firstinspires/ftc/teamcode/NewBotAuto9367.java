@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.LightSensor;
@@ -17,21 +19,44 @@ import java.util.Set;
 public class NewBotAuto9367 extends LinearOpMode {
 
     DcMotor flDrive, frDrive, rlDrive, rrDrive, collector, shooter;
-    Servo ballServo;
-    ColorSensor colorSensor;
-    LightSensor lightSensor;
+    Servo lServo, rServo;
+    ColorSensor beaconColorSensor;
+    OpticalDistanceSensor beaconDistanceSensor, lineDistanceSensor;
+
 
     boolean releaseOneBall = false;
+
+
+    //need to test out the followings
     double ballServoBlockPosition = 0;
     double ballServoReleasePosition = 1;
+    double lServoRestPosition = 1;
+    double lServoPressPosition = 0;
+    double rServoRestPosition = 0;
+    double rServoPressPosition = 1;
+
     long setTime = 0;
     long ballServoReleaseTime = 1000;
     long ballServoReleaseWaitTime = 500;
     long shooterResetTime = 1000;
     long shooterShootingTime = 1500;
-    double lightSensorThreshold = 0.11;
+    double lightSensorThreshold = 0.15;
+    double lineColorSensorThreshold = 10;
+    double encoderErrorTolerance = 5;
 
+    int clicksToPowerRatio = 4000; //need to be tested out
+    //  double whiteLineSearchTurningFactor = 3; //need to be tested out
 
+    int initialHeading = 0;
+    int lastHeading = initialHeading;
+    double headingCorrectionFactor = 200;
+    double turningTolerance = 0.5;
+    double turningSlowDownThreshold = 20;
+    double isPositionReachedThreshold = 5;
+
+    double whiteLineEdge = 0.4;//need to test out
+    double beaconStopDistance = 0.2;
+    double approachBeaconCorrectionFactor = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -39,72 +64,48 @@ public class NewBotAuto9367 extends LinearOpMode {
         frDrive = hardwareMap.dcMotor.get("frDrive");
         rlDrive = hardwareMap.dcMotor.get("rlDrive");
         rrDrive = hardwareMap.dcMotor.get("rrDrive");
-        //   collector = hardwareMap.dcMotor.get("collector");
-        //   shooter = hardwareMap.dcMotor.get("shooter");
-        //   ballServo = hardwareMap.servo.get("ballServo");
-        //   colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        //    lightSensor = hardwareMap.lightSensor.get("lightSensor");
-        MoveUsingEncoder moveEnco = new MoveUsingEncoder();
+        collector = hardwareMap.dcMotor.get("collector");
+        shooter = hardwareMap.dcMotor.get("shooter");
+        beaconDistanceSensor = hardwareMap.opticalDistanceSensor.get("beaconDistanceSensor");
+        lineDistanceSensor = hardwareMap.opticalDistanceSensor.get("lineDistanceSensor");
+        beaconColorSensor = hardwareMap.colorSensor.get("beaconColorSensor");
+
+        frDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rrDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        collector.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooter.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        ResetAllEncoders();
 
         waitForStart();
 
-        SetAllVariablesToDefault();
-
-        /*
-
-        releaseOneBall = false;
-        ShootBall(releaseOneBall);
-
-        Thread.sleep(500);
-
-        releaseOneBall = true;
-        ShootBall(releaseOneBall);
-
-        Thread.sleep(500);
-*/
-
-        //test encoders for spinning
-        double[] clockwise = {0, 0, 0, 0};
-        moveEnco.ClockwiseTurnEncoder(0.2, 1000);
-        clockwise = RecordCurrentPosition();
-
-        telemetry.addData("Clockwise fl", clockwise[0]);
-        telemetry.addData("Clockwise fr", clockwise[1]);
-        telemetry.addData("Clockwise rl", clockwise[2]);
-        telemetry.addData("Clockwise rr", clockwise[3]);
-
-        Thread.sleep(3000);
-
-        double[] counterClockwise = {0, 0, 0, 0};
-        moveEnco.CounterClockwiseTurnEncoder(0.2, 1000);
-        counterClockwise = RecordCurrentPosition();
-
-        telemetry.addData("Counterclockwise fl", counterClockwise[0]);
-        telemetry.addData("Counterclockwise fr", counterClockwise[1]);
-        telemetry.addData("Counterclockwise rl", counterClockwise[2]);
-        telemetry.addData("Counterclockwise rr", counterClockwise[3]);
-
-
-
-        moveEnco.RightEncoder(0.4,1000);
-        moveEnco.ForwardEncoder(0.4, 1000);
-
 
     }
 
+    void SearchWhiteLine(String team) {
 
-    //Below are functions
-    void SetAllVariablesToDefault() {
-        colorSensor.enableLed(false);
-        ballServo.setPosition(ballServoBlockPosition);
-        flDrive.setPower(0);
-        frDrive.setPower(0);
-        rlDrive.setPower(0);
-        rrDrive.setPower(0);
-        shooter.setPower(0);
-        collector.setPower(0);
+        StopDrives();
+
+        while (lineDistanceSensor.getLightDetected() < whiteLineEdge) {
+            if (team.equalsIgnoreCase("red")) {
+                Forward(0.5);
+            }
+            else if(team.equalsIgnoreCase("blue")){
+                Backward(0.5);
+            }
+        }
+
+        StopDrives();
     }
 
+    void ApproachBeacon(){
+        while(beaconDistanceSensor.getLightDetected() > beaconStopDistance){
+            flDrive.setPower(- 0.4 - (lineDistanceSensor.getLightDetected() - whiteLineEdge) * approachBeaconCorrectionFactor);
+            frDrive.setPower(0.4 + (lineDistanceSensor.getLightDetected() - whiteLineEdge) * approachBeaconCorrectionFactor);
+            rlDrive.setPower(0.4 - (lineDistanceSensor.getLightDetected() - whiteLineEdge) * approachBeaconCorrectionFactor);
+            rrDrive.setPower(- 0.4 + (lineDistanceSensor.getLightDetected() - whiteLineEdge) * approachBeaconCorrectionFactor);
+        }
+    }
 
     void SetAllDrivesToRunToPosition() {
         flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -113,7 +114,6 @@ public class NewBotAuto9367 extends LinearOpMode {
         rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-
     void SetAllDrivesToUsingEncoders() {
         flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -121,16 +121,31 @@ public class NewBotAuto9367 extends LinearOpMode {
         rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-
-    void StopDrivesIfFinished() {
-        while (!flDrive.isBusy() && !frDrive.isBusy() && !rlDrive.isBusy() && !rrDrive.isBusy()) {
-            flDrive.setPower(0);
-            frDrive.setPower(0);
-            rlDrive.setPower(0);
-            rrDrive.setPower(0);
-        }
+    void SetAllDrivesToNotUsingEncoders() {
+        flDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rlDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    void ResetAllEncoders() {
+        flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    }
+
+    //stop all drives
+    void StopDrives() {
+
+        SetAllDrivesToNotUsingEncoders();
+        flDrive.setPower(0);
+        frDrive.setPower(0);
+        rlDrive.setPower(0);
+        rrDrive.setPower(0);
+
+    }
 
     void WaitFor(long time) {
         setTime = System.currentTimeMillis();
@@ -138,11 +153,12 @@ public class NewBotAuto9367 extends LinearOpMode {
             continue;
         }
     }
-
-
+/*
     void ShootBall(boolean releaseBall) {
 
-        SetAllVariablesToDefault();
+        ballServo.setPosition(ballServoBlockPosition);
+        shooter.setPower(0);
+        collector.setPower(0);
 
         if (releaseBall) {
 
@@ -180,12 +196,17 @@ public class NewBotAuto9367 extends LinearOpMode {
 
         }
     }
+*/
 
-
+    // MoveUsingEncoders (constant speed)
     void Forward(double power) {
 
-        SetAllVariablesToDefault();
-        SetAllDrivesToRunToPosition();
+        SetAllDrivesToUsingEncoders();
+
+        flDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        frDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        rlDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        rrDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
 
         flDrive.setPower(power);
         frDrive.setPower(power);
@@ -196,8 +217,12 @@ public class NewBotAuto9367 extends LinearOpMode {
 
     void Backward(double power) {
 
-        SetAllVariablesToDefault();
-        SetAllDrivesToRunToPosition();
+        SetAllDrivesToUsingEncoders();
+
+        flDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        frDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        rlDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        rrDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
 
         flDrive.setPower(-power);
         frDrive.setPower(-power);
@@ -208,457 +233,337 @@ public class NewBotAuto9367 extends LinearOpMode {
 
     void Left(double power) {
 
-        SetAllVariablesToDefault();
-        SetAllDrivesToRunToPosition();
+        SetAllDrivesToUsingEncoders();
+
+        flDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        frDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        rlDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        rrDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
 
         flDrive.setPower(-power);
         frDrive.setPower(power);
         rlDrive.setPower(power);
         rrDrive.setPower(-power);
-
 
     }
 
     void Right(double power) {
 
-        SetAllVariablesToDefault();
-        SetAllDrivesToRunToPosition();
+        SetAllDrivesToUsingEncoders();
+
+        flDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        frDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        rlDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
+        rrDrive.setMaxSpeed((int) (Math.abs(power) * clicksToPowerRatio));
 
         flDrive.setPower(power);
         frDrive.setPower(-power);
         rlDrive.setPower(-power);
         rrDrive.setPower(power);
 
-
     }
 
-    void ClockwiseTurn(double power) {
 
-        SetAllVariablesToDefault();
+    boolean isPositionReached() {
+        if((Math.abs(flDrive.getCurrentPosition() - flDrive.getTargetPosition()) + Math.abs(frDrive.getCurrentPosition() - frDrive.getTargetPosition()) + Math.abs(rlDrive.getCurrentPosition() - rlDrive.getTargetPosition()) + Math.abs(rrDrive.getCurrentPosition() - rrDrive.getTargetPosition())) / 4 < encoderErrorTolerance){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+    double IntArrayListAvg(ArrayList<Integer> a) {
+        double sum = 0;
+        for (int i = 0; i < a.size(); i++) {
+            sum += a.get(i);
+        }
+        return sum / a.size();
+    }
+
+    //for beacon detection
+    String AnalyzeColor(long detectionTime) {
+
+        ArrayList<Integer> red = new ArrayList<>();
+        ArrayList<Integer> blue = new ArrayList<>();
+
+        long initTime = System.currentTimeMillis();
+
+        double redSum = 0;
+        double blueSum = 0;
+
+        while (System.currentTimeMillis() - initTime < detectionTime) {
+            red.add(beaconColorSensor.red());
+            blue.add(beaconColorSensor.blue());
+        }
+
+        if (IntArrayListAvg(red) < (IntArrayListAvg(blue) - 2)) {
+            return "blue";
+        } else {
+            return "red";
+        }
+    }
+
+
+    void ForwardPosition(double power, int distance) {
+
+        StopDrives();
         SetAllDrivesToRunToPosition();
 
-        flDrive.setPower(power);
-        frDrive.setPower(-power);
-        rlDrive.setPower(power);
-        rrDrive.setPower(-power);
+        flDrive.setTargetPosition(flDrive.getCurrentPosition() + distance);
+        frDrive.setTargetPosition(frDrive.getCurrentPosition() + distance);
+        rlDrive.setTargetPosition(rlDrive.getCurrentPosition() + distance);
+        rrDrive.setTargetPosition(rrDrive.getCurrentPosition() + distance);
 
+        while (!isPositionReached()) {
+            flDrive.setPower(power);
+            frDrive.setPower(power);
+            rlDrive.setPower(power);
+            rrDrive.setPower(power);
+        }
+
+        StopDrives();
 
     }
 
-    void CounterClockwiseTurn(double power) {
+    void BackWardPosition(double power, int distance) {
 
-        SetAllVariablesToDefault();
+        StopDrives();
         SetAllDrivesToRunToPosition();
 
-        flDrive.setPower(-power);
-        frDrive.setPower(power);
-        rlDrive.setPower(-power);
-        rrDrive.setPower(power);
+        flDrive.setTargetPosition(flDrive.getCurrentPosition() - distance);
+        frDrive.setTargetPosition(frDrive.getCurrentPosition() - distance);
+        rlDrive.setTargetPosition(rlDrive.getCurrentPosition() - distance);
+        rrDrive.setTargetPosition(rrDrive.getCurrentPosition() - distance);
 
+        while (!isPositionReached()) {
+            flDrive.setPower(-power);
+            frDrive.setPower(-power);
+            rlDrive.setPower(-power);
+            rrDrive.setPower(-power);
+        }
+
+        StopDrives();
 
     }
 
+    void LeftPosition(double power, int distance) {
 
-/*
-    public class MoveUsingEncoder{
+        StopDrives();
+        SetAllDrivesToRunToPosition();
 
-        MoveUsingEncoder() {
-            SetAllVariablesToDefault();
-            SetAllDrivesToRunToPosition();
+        flDrive.setTargetPosition(flDrive.getCurrentPosition() - distance);
+        frDrive.setTargetPosition(frDrive.getCurrentPosition() + distance);
+        rlDrive.setTargetPosition(rlDrive.getCurrentPosition() + distance);
+        rrDrive.setTargetPosition(rrDrive.getCurrentPosition() - distance);
+
+        while (!isPositionReached()) {
+            flDrive.setPower(-power);
+            frDrive.setPower(power);
+            rlDrive.setPower(power);
+            rrDrive.setPower(-power);
         }
 
-        void ForwardEncoder(double power, int distance){
+        StopDrives();
 
-            int flDriveMovement = flDrive.getCurrentPosition() + distance;
-            int frDriveMovement = frDrive.getCurrentPosition() + distance;
-            int rlDriveMovement = rlDrive.getCurrentPosition() + distance;
-            int rrDriveMovement = rrDrive.getCurrentPosition() + distance;
+    }
 
-            double flPower = power;
-            double frPower = power;
-            double rlPower = power;
-            double rrPower = power;
+    void RightPosition(double power, int distance) {
 
-            flDrive.setTargetPosition(flDriveMovement);
-            frDrive.setTargetPosition(frDriveMovement);
-            rlDrive.setTargetPosition(rlDriveMovement);
-            rrDrive.setTargetPosition(rrDriveMovement);
+        StopDrives();
+        SetAllDrivesToRunToPosition();
 
-            flDrive.setPower(flPower);
-            frDrive.setPower(frPower);
-            rlDrive.setPower(rlPower);
-            rrDrive.setPower(rrPower);
+        flDrive.setTargetPosition(flDrive.getCurrentPosition() + distance);
+        frDrive.setTargetPosition(frDrive.getCurrentPosition() - distance);
+        rlDrive.setTargetPosition(rlDrive.getCurrentPosition() - distance);
+        rrDrive.setTargetPosition(rrDrive.getCurrentPosition() + distance);
 
-            StopDrivesIfFinished();
+        while (!isPositionReached()) {
+            flDrive.setPower(power);
+            frDrive.setPower(-power);
+            rlDrive.setPower(-power);
+            rrDrive.setPower(power);
         }
 
+        StopDrives();
 
-        void BackwardEncoder(double power, int distance){
+    }
 
-            int flDriveMovement = flDrive.getCurrentPosition() - distance;
-            int frDriveMovement = frDrive.getCurrentPosition() - distance;
-            int rlDriveMovement = rlDrive.getCurrentPosition() - distance;
-            int rrDriveMovement = rrDrive.getCurrentPosition() - distance;
+    void ClockwisePosition(double power, int distance) {
 
-            double flPower = -power;
-            double frPower = -power;
-            double rlPower = -power;
-            double rrPower = -power;
+        StopDrives();
+        SetAllDrivesToRunToPosition();
 
-            flDrive.setTargetPosition(flDriveMovement);
-            frDrive.setTargetPosition(frDriveMovement);
-            rlDrive.setTargetPosition(rlDriveMovement);
-            rrDrive.setTargetPosition(rrDriveMovement);
+        flDrive.setTargetPosition(flDrive.getCurrentPosition() + distance);
+        frDrive.setTargetPosition(frDrive.getCurrentPosition() - distance);
+        rlDrive.setTargetPosition(rlDrive.getCurrentPosition() + distance);
+        rrDrive.setTargetPosition(rrDrive.getCurrentPosition() - distance);
 
-            flDrive.setPower(flPower);
-            frDrive.setPower(frPower);
-            rlDrive.setPower(rlPower);
-            rrDrive.setPower(rrPower);
-
-            StopDrivesIfFinished();
+        while (!isPositionReached()) {
+            flDrive.setPower(power);
+            frDrive.setPower(-power);
+            rlDrive.setPower(power);
+            rrDrive.setPower(-power);
         }
 
-        void LeftEncoder(double power, int distance){
+        StopDrives();
 
-            int flDriveMovement = flDrive.getCurrentPosition() - distance;
-            int frDriveMovement = frDrive.getCurrentPosition() + distance;
-            int rlDriveMovement = rlDrive.getCurrentPosition() + distance;
-            int rrDriveMovement = rrDrive.getCurrentPosition() - distance;
+    }
 
-            double flPower = -power;
-            double frPower = +power;
-            double rlPower = +power;
-            double rrPower = -power;
+    void CounterClockwisePosition(double power, int distance) {
 
-            flDrive.setTargetPosition(flDriveMovement);
-            frDrive.setTargetPosition(frDriveMovement);
-            rlDrive.setTargetPosition(rlDriveMovement);
-            rrDrive.setTargetPosition(rrDriveMovement);
+        StopDrives();
+        SetAllDrivesToRunToPosition();
 
-            flDrive.setPower(flPower);
-            frDrive.setPower(frPower);
-            rlDrive.setPower(rlPower);
-            rrDrive.setPower(rrPower);
+        flDrive.setTargetPosition(flDrive.getCurrentPosition() - distance);
+        frDrive.setTargetPosition(frDrive.getCurrentPosition() + distance);
+        rlDrive.setTargetPosition(rlDrive.getCurrentPosition() - distance);
+        rrDrive.setTargetPosition(rrDrive.getCurrentPosition() + distance);
 
-            StopDrivesIfFinished();
-
+        while (!isPositionReached()) {
+            flDrive.setPower(-power);
+            frDrive.setPower(power);
+            rlDrive.setPower(-power);
+            rrDrive.setPower(power);
         }
 
-        void RightEncoder(double power, int distance){
+        StopDrives();
 
-            int flDriveMovement = flDrive.getCurrentPosition() + distance;
-            int frDriveMovement = frDrive.getCurrentPosition() - distance;
-            int rlDriveMovement = rlDrive.getCurrentPosition() - distance;
-            int rrDriveMovement = rrDrive.getCurrentPosition() + distance;
-
-            double flPower = power;
-            double frPower = -power;
-            double rlPower = -power;
-            double rrPower = power;
-
-            flDrive.setTargetPosition(flDriveMovement);
-            frDrive.setTargetPosition(frDriveMovement);
-            rlDrive.setTargetPosition(rlDriveMovement);
-            rrDrive.setTargetPosition(rrDriveMovement);
-
-            flDrive.setPower(flPower);
-            frDrive.setPower(frPower);
-            rlDrive.setPower(rlPower);
-            rrDrive.setPower(rrPower);
-
-            StopDrivesIfFinished();
-
-        }
-
-        void ClockwiseTurnEncoder(double power, int distance){
-
-            int flDriveMovement = flDrive.getCurrentPosition() + distance;
-            int frDriveMovement = frDrive.getCurrentPosition() - distance;
-            int rlDriveMovement = rlDrive.getCurrentPosition() + distance;
-            int rrDriveMovement = rrDrive.getCurrentPosition() - distance;
-
-            double flPower = -power;
-            double frPower = power;
-            double rlPower = -power;
-            double rrPower = power;
-
-            flDrive.setTargetPosition(flDriveMovement);
-            frDrive.setTargetPosition(frDriveMovement);
-            rlDrive.setTargetPosition(rlDriveMovement);
-            rrDrive.setTargetPosition(rrDriveMovement);
-
-            flDrive.setPower(flPower);
-            frDrive.setPower(frPower);
-            rlDrive.setPower(rlPower);
-            rrDrive.setPower(rrPower);
-
-            StopDrivesIfFinished();
-
-        }
-
-        void CounterClockwiseTurnEncoder(double power, int distance){
-
-            int flDriveMovement = flDrive.getCurrentPosition() - distance;
-            int frDriveMovement = frDrive.getCurrentPosition() + distance;
-            int rlDriveMovement = rlDrive.getCurrentPosition() - distance;
-            int rrDriveMovement = rrDrive.getCurrentPosition() + distance;
-
-            double flPower = -power;
-            double frPower = power;
-            double rlPower = -power;
-            double rrPower = power;
+    }
+}
 
 
-            flDrive.setTargetPosition(flDriveMovement);
-            frDrive.setTargetPosition(frDriveMovement);
-            rlDrive.setTargetPosition(rlDriveMovement);
-            rrDrive.setTargetPosition(rrDriveMovement);
 
-            flDrive.setPower(flPower);
-            frDrive.setPower(frPower);
-            rlDrive.setPower(rlPower);
-            rrDrive.setPower(rrPower);
 
-            StopDrivesIfFinished();
-        }
 
-        void CombineMovements(ArrayList<MoveUsingEncoder> ary){
+    /*
+    void SearchForWhiteLine(String teamColor) {
 
-            int flDriveMovement = 0;
-            int frDriveMovement = 0;
-            int rlDriveMovement = 0;
-            int rrDriveMovement = 0;
+        StopDrives();
+        lineColorSensor.enableLed(true);
 
-            double flPower = 0;
-            double frPower = 0;
-            double rlPower = 0;
-            double rrPower = 0;
+        if (teamColor.equalsIgnoreCase("red")) {
 
-            for(int i = 0; i < ary.size(); i++){
-                flDriveMovement += ary.get(i).;
+            while (lightSensor.getLightDetected() < lightSensorThreshold) {
+                Forward(0.1);
             }
+
+            StopDrives();
+
+            while (getColorSensorAvg(lineColorSensor) < lineColorSensorThreshold) {
+                Forward(0.1);
+            }
+
+            StopDrives();
+
+            while(lightSensor.getLightDetected() < lightSensorThreshold) {
+                CounterClockwiseTurn(0.1);
+            }
+
+            StopDrives();
+
+            //might need to move a bit
+
+            while ((distanceSensor1.getLightDetected() + distanceSensor2.getLightDetected()) / 2 < distanceColorDetection) {
+                Left(0.1);
+            }
+
+            StopDrives();
+
+            if (AnalyzeColor(1000).equalsIgnoreCase("red")) {
+                Move("right", 0.2, 700);
+                redServo.setPosition(redServoPressPosition);
+            }
+
+            else {
+                Move("right", 0.2, 700);
+                blueServo.setPosition(blueServoPressPosition);
+            }
+
+            while ((distanceSensor1.getLightDetected() + distanceSensor2.getLightDetected()) / 2 < distanceBeaconPressing) {
+                Left(0.4);
+            }
+
+            WaitFor(800);
+
+            Move("right", 0.2, 1200);
+            SetAllVariablesToDefault();
+
         }
+
+        else {
+
+            while(lightSensor.getLightDetected() < lightSensorThreshold) {
+                Backward(0.1);
+            }
+
+            StopDrives();
+
+            while(getColorSensorAvg(lineColorSensor) < lineColorSensorThreshold) {
+                Backward(0.1);
+            }
+
+            StopDrives();
+
+            while(lightSensor.getLightDetected() < lightSensorThreshold) {
+                ClockwiseTurn(0.1);
+            }
+
+            StopDrives();
+
+            //might need to move a bit
+
+            while ((distanceSensor1.getLightDetected() + distanceSensor2.getLightDetected()) / 2 < distanceColorDetection) {
+                Left(0.1);
+            }
+
+            StopDrives();
+
+            if (AnalyzeColor(1000).equalsIgnoreCase("red")) {
+                Move("right", 0.2, 700);
+                redServo.setPosition(redServoPressPosition);
+            }
+
+            else {
+                Move("right", 0.2, 700);
+                blueServo.setPosition(blueServoPressPosition);
+            }
+
+            while ((distanceSensor1.getLightDetected() + distanceSensor2.getLightDetected()) / 2 < distanceBeaconPressing) {
+                Left(0.4);
+            }
+
+            WaitFor(800);
+
+            Move("right", 0.2, 1200);
+            SetAllVariablesToDefault();
+
+        }
+
 
     }
 */
 
-    void startToMove(double flPower, double frPower, double rlPower, double rrPower, int flDriveMovement, int frDriveMovement, int rlDriveMovement, int rrDriveMovement){
-        flDrive.setTargetPosition(flDriveMovement);
-        frDrive.setTargetPosition(frDriveMovement);
-        rlDrive.setTargetPosition(rlDriveMovement);
-        rrDrive.setTargetPosition(rrDriveMovement);
-
-        flDrive.setPower(flPower);
-        frDrive.setPower(frPower);
-        rlDrive.setPower(rlPower);
-        rrDrive.setPower(rrPower);
-    }
-
-
-    public class MoveUsingEncoder{
-
-        int flDriveMovement, frDriveMovement, rlDriveMovement, rrDriveMovement;
-        double flPower, frPower, rlPower, rrPower;
-
-        MoveUsingEncoder() {
-            SetAllVariablesToDefault();
-            SetAllDrivesToRunToPosition();
-        }
-
-        MoveUsingEncoder(String direction, double inputPower, int inputDistance){
-
-            SetAllVariablesToDefault();
-            SetAllDrivesToRunToPosition();
-
-            if(direction.equalsIgnoreCase("forward")){
-                flDriveMovement = flDrive.getCurrentPosition() + inputDistance;
-                frDriveMovement = frDrive.getCurrentPosition() + inputDistance;
-                rlDriveMovement = rlDrive.getCurrentPosition() + inputDistance;
-                rrDriveMovement = rrDrive.getCurrentPosition() + inputDistance;
-
-                flPower = inputPower;
-                frPower = inputPower;
-                rlPower = inputPower;
-                rrPower = inputPower;
-
-                startToMove(flPower, frPower, rlPower, rrPower, flDriveMovement, frDriveMovement, rlDriveMovement, rrDriveMovement);
-            }
-
-            if(direction.equalsIgnoreCase("backward")){
-                flDriveMovement = flDrive.getCurrentPosition() - inputDistance;
-                frDriveMovement = frDrive.getCurrentPosition() - inputDistance;
-                rlDriveMovement = rlDrive.getCurrentPosition() - inputDistance;
-                rrDriveMovement = rrDrive.getCurrentPosition() - inputDistance;
-
-                flPower = -inputPower;
-                frPower = -inputPower;
-                rlPower = -inputPower;
-                rrPower = -inputPower;
-
-                startToMove(flPower, frPower, rlPower, rrPower, flDriveMovement, frDriveMovement, rlDriveMovement, rrDriveMovement);
-            }
-
-            if(direction.equalsIgnoreCase("left")){
-                flDriveMovement = flDrive.getCurrentPosition() - inputDistance;
-                frDriveMovement = frDrive.getCurrentPosition() + inputDistance;
-                rlDriveMovement = rlDrive.getCurrentPosition() + inputDistance;
-                rrDriveMovement = rrDrive.getCurrentPosition() - inputDistance;
-
-                flPower = -inputPower;
-                frPower = inputPower;
-                rlPower = inputPower;
-                rrPower = -inputPower;
-
-                startToMove(flPower, frPower, rlPower, rrPower, flDriveMovement, frDriveMovement, rlDriveMovement, rrDriveMovement);
-            }
-
-            if(direction.equalsIgnoreCase("right")){
-                flDriveMovement = flDrive.getCurrentPosition() + inputDistance;
-                frDriveMovement = frDrive.getCurrentPosition() - inputDistance;
-                rlDriveMovement = rlDrive.getCurrentPosition() - inputDistance;
-                rrDriveMovement = rrDrive.getCurrentPosition() + inputDistance;
-
-                flPower = inputPower;
-                frPower = -inputPower;
-                rlPower = -inputPower;
-                rrPower = inputPower;
-
-                startToMove(flPower, frPower, rlPower, rrPower, flDriveMovement, frDriveMovement, rlDriveMovement, rrDriveMovement);
-            }
-
-            if(direction.equalsIgnoreCase("clockwise")){
-                flDriveMovement = flDrive.getCurrentPosition() + inputDistance;
-                frDriveMovement = frDrive.getCurrentPosition() - inputDistance;
-                rlDriveMovement = rlDrive.getCurrentPosition() + inputDistance;
-                rrDriveMovement = rrDrive.getCurrentPosition() - inputDistance;
-
-                flPower = inputPower;
-                frPower = -inputPower;
-                rlPower = inputPower;
-                rrPower = -inputPower;
-
-                startToMove(flPower, frPower, rlPower, rrPower, flDriveMovement, frDriveMovement, rlDriveMovement, rrDriveMovement);
-            }
-
-            if(direction.equalsIgnoreCase("counterclockwise")){
-                flDriveMovement = flDrive.getCurrentPosition() - inputDistance;
-                frDriveMovement = frDrive.getCurrentPosition() + inputDistance;
-                rlDriveMovement = rlDrive.getCurrentPosition() - inputDistance;
-                rrDriveMovement = rrDrive.getCurrentPosition() + inputDistance;
-
-                flPower = -inputPower;
-                frPower = inputPower;
-                rlPower = -inputPower;
-                rrPower = inputPower;
-
-                startToMove(flPower, frPower, rlPower, rrPower, flDriveMovement, frDriveMovement, rlDriveMovement, rrDriveMovement);
-            }
-
-            StopDrivesIfFinished();
-        }
 
 
 
 
-
-        void ClockwiseTurnEncoder(double power, int distance){
-
-            int flDriveMovement = flDrive.getCurrentPosition() + distance;
-            int frDriveMovement = frDrive.getCurrentPosition() - distance;
-            int rlDriveMovement = rlDrive.getCurrentPosition() + distance;
-            int rrDriveMovement = rrDrive.getCurrentPosition() - distance;
-
-            double flPower = -power;
-            double frPower = power;
-            double rlPower = -power;
-            double rrPower = power;
-
-            flDrive.setTargetPosition(flDriveMovement);
-            frDrive.setTargetPosition(frDriveMovement);
-            rlDrive.setTargetPosition(rlDriveMovement);
-            rrDrive.setTargetPosition(rrDriveMovement);
-
-            flDrive.setPower(flPower);
-            frDrive.setPower(frPower);
-            rlDrive.setPower(rlPower);
-            rrDrive.setPower(rrPower);
-
-            StopDrivesIfFinished();
-
-        }
-
-        void CounterClockwiseTurnEncoder(double power, int distance){
-
-            int flDriveMovement = flDrive.getCurrentPosition() - distance;
-            int frDriveMovement = frDrive.getCurrentPosition() + distance;
-            int rlDriveMovement = rlDrive.getCurrentPosition() - distance;
-            int rrDriveMovement = rrDrive.getCurrentPosition() + distance;
-
-            double flPower = -power;
-            double frPower = power;
-            double rlPower = -power;
-            double rrPower = power;
-
-
-            flDrive.setTargetPosition(flDriveMovement);
-            frDrive.setTargetPosition(frDriveMovement);
-            rlDrive.setTargetPosition(rlDriveMovement);
-            rrDrive.setTargetPosition(rrDriveMovement);
-
-            flDrive.setPower(flPower);
-            frDrive.setPower(frPower);
-            rlDrive.setPower(rlPower);
-            rrDrive.setPower(rrPower);
-
-            StopDrivesIfFinished();
-        }
-
-        void CombineMovements(ArrayList<MoveUsingEncoder> ary){
-
-            int flDriveMovement = 0;
-            int frDriveMovement = 0;
-            int rlDriveMovement = 0;
-            int rrDriveMovement = 0;
-
-            double flPower = 0;
-            double frPower = 0;
-            double rlPower = 0;
-            double rrPower = 0;
-
-            for(int i = 0; i < ary.size(); i++){
-                flDriveMovement += ary.get(i).;
-            }
-        }
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-    double[] RecordCurrentPosition(){
+/*
+    double[] getCurrentPosition() {
         double[] ary = {flDrive.getCurrentPosition(), frDrive.getCurrentPosition(), rlDrive.getCurrentPosition(), rrDrive.getCurrentPosition()};
         return ary;
     }
 
-
-    boolean AreAbsoluteValueSimilar(double[] a, double[] b){
+    boolean ArraysSimilar(double[] a, double[] b){
 
         double sumOfDifference = 0;
-        double positiveThreshold = 5; //guessed
-        double negativeThreshold = -5; //guessed
 
         for(int i = 0; i < a.length; i++){
-            sumOfDifference += (Math.abs(a[i]) - Math.abs(b[i]));
+            sumOfDifference += Math.abs(Math.abs(a[i]) - Math.abs(b[i]));
         }
 
-        if(sumOfDifference/4 < positiveThreshold && sumOfDifference/4 > negativeThreshold){
+        if(sumOfDifference/4 < encoderErrorTolerance){
             return true;
         }
 
@@ -668,7 +573,6 @@ public class NewBotAuto9367 extends LinearOpMode {
 
     }
 
-
     double[] ArrayAddition(double[] a, double[] b){
         double[] sum = new double[a.length];
         for(int i = 0; i < sum.length; i++){
@@ -677,25 +581,173 @@ public class NewBotAuto9367 extends LinearOpMode {
         return sum;
     }
 
+    double ArrayAvg(double[] a){
+        double sum = 0;
+        for(int i = 0; i < a.length; i++){
+            sum += a[i];
+        }
+        return sum/a.length;
+    }
+*/
 
 
 
-    void SearchForWhiteLine(boolean ifRedTeam){
 
-        SetAllVariablesToDefault();
-        SetAllDrivesToUsingEncoders();
-        double[] initialPosition = RecordCurrentPosition();
-        double[] maxMovement = {800,800,800,800};
 
-        if(ifRedTeam){
-            while(!AreAbsoluteValueSimilar(RecordCurrentPosition(), ArrayAddition(initialPosition, maxMovement)) || lightSensor.getLightDetected() < lightSensorThreshold){
-                Backward(0.1);
+/*
+    //must be used with gyro to correct heading
+    void ForwardEncoder(double power, int distance){
+
+        StopDrives();
+        SetAllDrivesToRunToPosition();
+
+        double rawHeadingError;
+        double headingError = 0;
+
+        flDrive.setTargetPosition(flDrive.getCurrentPosition() + distance);
+        frDrive.setTargetPosition(frDrive.getCurrentPosition() + distance);
+        rlDrive.setTargetPosition(flDrive.getCurrentPosition() + distance);
+        rrDrive.setTargetPosition(frDrive.getCurrentPosition() + distance);
+
+        while(!isPositionReached()){
+
+            rawHeadingError = gyro.getHeading() - lastHeading;
+            if(Math.abs(rawHeadingError) > 180) {
+                headingError = rawHeadingError - Math.signum(rawHeadingError) * 360;
             }
 
-
+            flDrive.setPower( power - headingError / headingCorrectionFactor);
+            frDrive.setPower( power + headingError / headingCorrectionFactor);
+            rlDrive.setPower( power - headingError / headingCorrectionFactor);
+            rrDrive.setPower( power + headingError / headingCorrectionFactor);
         }
 
+        StopDrives();
 
     }
 
-}
+    void BackwardEncoder(double power, int distance) {
+
+        StopDrives();
+        SetAllDrivesToRunToPosition();
+
+        double rawHeadingError;
+        double headingError = 0;
+
+        flDrive.setTargetPosition(flDrive.getCurrentPosition() - distance);
+        frDrive.setTargetPosition(frDrive.getCurrentPosition() - distance);
+        rlDrive.setTargetPosition(flDrive.getCurrentPosition() - distance);
+        rrDrive.setTargetPosition(frDrive.getCurrentPosition() - distance);
+
+        while(!isPositionReached()){
+
+            rawHeadingError = gyro.getHeading() - lastHeading;
+            if(Math.abs(rawHeadingError) > 180) {
+                headingError = rawHeadingError - Math.signum(rawHeadingError) * 360;
+            }
+
+            flDrive.setPower( - power + headingError / headingCorrectionFactor);
+            frDrive.setPower( - power - headingError / headingCorrectionFactor);
+            rlDrive.setPower( - power + headingError / headingCorrectionFactor);
+            rrDrive.setPower( - power - headingError / headingCorrectionFactor);
+        }
+
+        StopDrives();
+
+    }
+
+    void LeftEncoder(double power, int distance){
+
+        StopDrives();
+        SetAllDrivesToRunToPosition();
+
+        double rawHeadingError;
+        double headingError = 0;
+
+        flDrive.setTargetPosition(flDrive.getCurrentPosition() - distance);
+        frDrive.setTargetPosition(frDrive.getCurrentPosition() + distance);
+        rlDrive.setTargetPosition(flDrive.getCurrentPosition() + distance);
+        rrDrive.setTargetPosition(frDrive.getCurrentPosition() - distance);
+
+        while(!isPositionReached()){
+
+            rawHeadingError = gyro.getHeading() - lastHeading;
+            if(Math.abs(rawHeadingError) > 180) {
+                headingError = rawHeadingError - Math.signum(rawHeadingError) * 360;
+            }
+
+            flDrive.setPower( - power + headingError / headingCorrectionFactor);
+            frDrive.setPower( power + headingError / headingCorrectionFactor);
+            rlDrive.setPower( power - headingError / headingCorrectionFactor);
+            rrDrive.setPower( - power - headingError / headingCorrectionFactor);
+        }
+
+        StopDrives();
+
+    }
+
+    void RightEncoder(double power, int distance){
+
+        StopDrives();
+        SetAllDrivesToRunToPosition();
+
+        double rawHeadingError;
+        double headingError = 0;
+
+        flDrive.setTargetPosition(flDrive.getCurrentPosition() + distance);
+        frDrive.setTargetPosition(frDrive.getCurrentPosition() - distance);
+        rlDrive.setTargetPosition(flDrive.getCurrentPosition() - distance);
+        rrDrive.setTargetPosition(frDrive.getCurrentPosition() + distance);
+
+        while(!isPositionReached()){
+
+            rawHeadingError = gyro.getHeading() - lastHeading;
+            if(Math.abs(rawHeadingError) > 180) {
+                headingError = rawHeadingError - Math.signum(rawHeadingError) * 360;
+            }
+
+            flDrive.setPower( power - headingError / headingCorrectionFactor);
+            frDrive.setPower( - power - headingError / headingCorrectionFactor);
+            rlDrive.setPower( - power + headingError / headingCorrectionFactor);
+            rrDrive.setPower( power + headingError / headingCorrectionFactor);
+        }
+
+        StopDrives();
+
+    }
+
+    void Rotate(double power, int turningDegree){
+
+        StopDrives();
+        SetAllDrivesToNotUsingEncoders();
+
+        double targetDegree = (lastHeading + turningDegree) % 360;
+        double errorDegree = turningTolerance + 1;
+        double slowDown;
+
+        while(Math.abs(errorDegree) > turningTolerance){
+
+            errorDegree = (targetDegree - gyro.getHeading()) % 360;
+
+            if(Math.abs(errorDegree) > turningSlowDownThreshold){
+                flDrive.setPower(Math.signum(targetDegree) * power);
+                frDrive.setPower(-Math.signum(targetDegree) * power);
+                rlDrive.setPower(Math.signum(targetDegree) * power);
+                rrDrive.setPower(-Math.signum(targetDegree) * power);
+            }
+
+            else{
+                slowDown = Math.abs(errorDegree) / turningSlowDownThreshold;
+                flDrive.setPower(Math.signum(targetDegree) * power * slowDown);
+                frDrive.setPower(-Math.signum(targetDegree) * power * slowDown);
+                rlDrive.setPower(Math.signum(targetDegree) * power * slowDown);
+                rrDrive.setPower(-Math.signum(targetDegree) * power * slowDown);
+            }
+        }
+
+        StopDrives();
+        lastHeading = gyro.getHeading();
+
+
+    }
+*/

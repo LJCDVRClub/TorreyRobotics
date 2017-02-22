@@ -41,7 +41,7 @@ public class Test9367 extends OpMode {
     @Override
     public void loop() {
 
-        colorSensor.enableLed(false);
+       // colorSensor.enableLed(false);
 
         telemetry.addData("currentRed ", colorSensor.red());
         telemetry.addData("currentGreen ", colorSensor.green());
@@ -55,6 +55,7 @@ public class Test9367 extends OpMode {
         telemetry.addData("currentdistance2rawlight ", distanceSensor2.getRawLightDetected());
         telemetry.addData("currentdistance1noMethod ", distanceSensor1);
         telemetry.addData("currentdistance2noMethod ", distanceSensor2);
+
 
 
         while(epoch <= totalEpoch){
@@ -96,10 +97,11 @@ public class Test9367 extends OpMode {
 
             count = 0;
             trigger = true;
-            epoch++;
+            //epoch++;
 
             }
 
+            epoch++;
         }
 
 
