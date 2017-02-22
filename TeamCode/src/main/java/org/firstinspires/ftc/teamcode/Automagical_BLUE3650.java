@@ -103,8 +103,15 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //drive into wall (almost)
-        lDrive.setPower(.20);
-        rDrive.setPower(.2);
+
+        //drive fast to reduce time
+        rDrive.setPower(.9);
+        lDrive.setPower(.9);
+        Thread.sleep(500);
+
+        //use touch sensors to be perpendicular to wall
+        lDrive.setPower(.16);
+        rDrive.setPower(.16);
         while(!(rTouch.isPressed()) || !(lTouch.isPressed())){
             if(rTouch.isPressed()){
                 rDrive.setPower(0);
@@ -124,8 +131,8 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-480);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()-480);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-400);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()-400);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
