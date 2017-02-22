@@ -148,7 +148,6 @@ public class Auto_RED_Gyro extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        initialHeading = getHeading(imu);
         //spin right to be parallel with beacons
         turnToAngle(90, imu);
         Thread.sleep(2000);
@@ -228,15 +227,15 @@ public class Auto_RED_Gyro extends LinearOpMode{
 
     }
 
-    void turnToAngle(double target, IMU_class imu){
+    void turnToAngle(double target, IMU_class a){
         lDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double converted_target;
-        initialHeading = getHeading(imu);
+        initialHeading = getHeading(a);
         converted_target= initialHeading + target;
         double turnError;
-        while(Math.abs(getHeading(imu) - converted_target) > 2) {
-            turnError = getHeading(imu) - converted_target;
+        while(Math.abs(getHeading(a) - converted_target) > 2) {
+            turnError = getHeading(a) - converted_target;
             if(Math.abs(turnError) > 30){
                 lDrive.setPower(0.3);
                 rDrive.setPower(-0.3);
@@ -245,8 +244,6 @@ public class Auto_RED_Gyro extends LinearOpMode{
                 lDrive.setPower(0.08 + turnError/30 * 0.22);
                 rDrive.setPower(-(0.08 + turnError/30 * 0.22));
             }
-            telemetry.addData("Degrees to target", Math.abs(converted_target - getHeading(imu)));
-            telemetry.update();
         }
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
