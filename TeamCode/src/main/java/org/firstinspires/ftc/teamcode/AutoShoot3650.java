@@ -27,13 +27,13 @@ public class AutoShoot3650 extends LinearOpMode {
         waitForStart(); //wait for start button
 
         //move up to firing position
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1100);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1100);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1250);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1250);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
         //spin up shooter
-        shooter.setPower(1.00);
+        shooter.setPower(.9);
 
         Thread.sleep(2500);
 

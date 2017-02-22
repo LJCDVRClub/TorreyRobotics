@@ -39,8 +39,8 @@ public class OperationTelly3650 extends OpMode {
         light = hardwareMap.lightSensor.get("light");
 
         //rest positions for servos
-        aftNeutral = 1.00; //check these!!!
-        foreNeutral = .1;
+        aftNeutral = .2; //1.0 is max
+        foreNeutral = 1.0; //0 is max
 
         //button pushing servos
         forePush = hardwareMap.servo.get("forePush");
@@ -52,6 +52,7 @@ public class OperationTelly3650 extends OpMode {
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         colorSensor.enableLed(false);
+        //sets beacon pushers to rest position
         forePush.setPosition(foreNeutral);
         aftPush.setPosition(aftNeutral);
 
@@ -64,25 +65,24 @@ public class OperationTelly3650 extends OpMode {
         lDrive.setPower(gamepad1.left_stick_y*.7);
         rDrive.setPower(gamepad1.right_stick_y*.7);
 
+        //code for beacon pushers
         if(gamepad1.right_bumper){
-            //aftPush.setPosition(aftPush.getPosition()-.1);
-            forePush.setPosition(forePush.getPosition()+.1);
+            forePush.setPosition(0);
         }
         else if(gamepad1.left_bumper){
-            aftPush.setPosition(aftPush.getPosition()-.1);
-            //forePush.setPosition(forePush.getPosition()-.1);
+            aftPush.setPosition(1.00);
         }
         else{
             aftPush.setPosition(aftNeutral);
             forePush.setPosition(foreNeutral);
         }
 
-
+        //shooter code
         if (gamepad2.dpad_down && gamepad2.right_trigger == 0){
             shooter.setPower(-1.0);
         }
         else if (!gamepad2.dpad_down && gamepad2.right_trigger > 0){
-            shooter.setPower(gamepad2.right_trigger);
+            shooter.setPower(gamepad2.right_trigger*.9);
         }
         else{
             shooter.setPower(0);
@@ -104,7 +104,7 @@ public class OperationTelly3650 extends OpMode {
 
 
 
-
+        //collector controls
         if (gamepad2.left_bumper){
             collector.setPower(-1.0);
         }
@@ -122,7 +122,7 @@ public class OperationTelly3650 extends OpMode {
             ballServo.setPosition(0.14);
         }*/
 
-        //shows values from color sensor on driver station phone
+        //values to be shown on the driver station
         telemetry.addData("Distance value",ods.getLightDetected());
         telemetry.addData("Light", light.getLightDetected());
         telemetry.addData("Red ", colorSensor.red());
