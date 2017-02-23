@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
 @Autonomous(name = "IMU_test", group = "3650")
+@Disabled
 public class IMU_test extends LinearOpMode{
 
     ColorSensor colorSensor;
@@ -67,13 +69,7 @@ public class IMU_test extends LinearOpMode{
 
         waitForStart(); //waits for start button to be pressed
 
-        initialHeading = getHeading(imu);
-        while(opModeIsActive()){
-            lDrive.setPower(0.2);
-            rDrive.setPower(-0.2);
-            telemetry.addData("currentHeading", getHeading(imu));
-            telemetry.update();
-        }
+        turnToAngle(90, imu);
 
 
 
@@ -87,18 +83,21 @@ public class IMU_test extends LinearOpMode{
         initialHeading = getHeading(a);
         converted_target= initialHeading + target;
         double turnError;
-        while(Math.abs(getHeading(a) - converted_target) > 3) {
-            turnError = getHeading(a) - converted_target;
+        while(Math.abs(converted_target - getHeading(a)) > 3) {
+            turnError = converted_target - getHeading(a);
+            if(Math.abs(turnError) > 180){
+                turnError = turnError - Math.signum(turnError) * 360;
+            }
             if(Math.abs(turnError) > 30){
-                lDrive.setPower(0.2);
-                rDrive.setPower(-0.2);
+                lDrive.setPower(-Math.signum(turnError) * 0.3);
+                rDrive.setPower(Math.signum(turnError) * 0.3);
             }
             else{
-                lDrive.setPower(0.06 + turnError/30 * 0.14);
-                rDrive.setPower(-(0.06 + turnError/30 * 0.14));
+                lDrive.setPower(-Math.signum(turnError) * (0.06 + turnError/30 * 0.24));
+                rDrive.setPower(Math.signum(turnError) * (0.06 + turnError/30 * 0.24));
             }
-            telemetry.addData("degrees to target", Math.abs(getHeading(imu) - converted_target));
-            telemetry.addData("current heading", getHeading(imu));
+            telemetry.addData("degrees to target", Math.abs(getHeading(a) - converted_target));
+            telemetry.addData("current heading", getHeading(a));
             telemetry.update();
         }
         lDrive.setPower(0);

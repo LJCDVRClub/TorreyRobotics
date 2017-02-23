@@ -151,7 +151,7 @@ public class Auto_RED_Gyro extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin right to be parallel with beacons
-        turnToAngle(90, imu);
+        turnToAngle(-90, imu);
         Thread.sleep(2000);
 
         //sets motors back to normal mode
@@ -236,15 +236,18 @@ public class Auto_RED_Gyro extends LinearOpMode{
         initialHeading = getHeading(a);
         converted_target= initialHeading + target;
         double turnError;
-        while(Math.abs(getHeading(a) - converted_target) > 3) {
+        while(Math.abs(converted_target - getHeading(a)) > 1) {
             turnError = converted_target - getHeading(a);
+            if(Math.abs(turnError) > 180){
+                turnError = turnError - Math.signum(turnError) * 360;
+            }
             if(Math.abs(turnError) > 30){
-                lDrive.setPower(0.2);
-                rDrive.setPower(-0.2);
+                lDrive.setPower(-Math.signum(turnError) * 0.25);
+                rDrive.setPower(Math.signum(turnError) * 0.25);
             }
             else{
-                lDrive.setPower(0.06 + turnError/30 * 0.14);
-                rDrive.setPower(-(0.06 + turnError/30 * 0.14));
+                lDrive.setPower(-Math.signum(turnError) * (0.06 + turnError/30 * 0.16));
+                rDrive.setPower(Math.signum(turnError) * (0.06 + turnError/30 * 0.16));
             }
             telemetry.addData("degrees to target", Math.abs(getHeading(a) - converted_target));
             telemetry.addData("current heading", getHeading(a));
