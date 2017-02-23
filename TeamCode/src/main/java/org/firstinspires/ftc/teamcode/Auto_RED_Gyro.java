@@ -22,13 +22,15 @@ public class Auto_RED_Gyro extends LinearOpMode{
     double lThresh, aftNeutral, foreNeutral;
     double initialHeading;
 
+    IMU_class imu;
 
 
-    IMU_class imu = new IMU_class("imu", hardwareMap);
+
 
 
     @Override
     public void runOpMode() throws InterruptedException {
+        imu = new IMU_class("imu", hardwareMap);
 
         lThresh = 0.08; //anything higher is white
 
@@ -234,7 +236,7 @@ public class Auto_RED_Gyro extends LinearOpMode{
         initialHeading = getHeading(a);
         converted_target= initialHeading + target;
         double turnError;
-        while(Math.abs(getHeading(a) - converted_target) > 2) {
+        while(Math.abs(getHeading(a) - converted_target) > 3) {
             turnError = getHeading(a) - converted_target;
             if(Math.abs(turnError) > 30){
                 lDrive.setPower(0.3);
@@ -244,7 +246,11 @@ public class Auto_RED_Gyro extends LinearOpMode{
                 lDrive.setPower(0.08 + turnError/30 * 0.22);
                 rDrive.setPower(-(0.08 + turnError/30 * 0.22));
             }
+            telemetry.addData("degrees to target", Math.abs(getHeading(imu) - converted_target));
+            telemetry.update();
         }
+        lDrive.setPower(0);
+        rDrive.setPower(0);
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

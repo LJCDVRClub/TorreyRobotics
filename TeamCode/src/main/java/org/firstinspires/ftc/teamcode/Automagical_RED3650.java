@@ -12,17 +12,6 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 @Autonomous(name = "Automagical: RED", group = "3650")
 public class Automagical_RED3650 extends LinearOpMode{
 
-    /*
-    ColorSensor hw.colorSensor;
-    LightSensor hw.light;
-    TouchSensor hw.lTouch, hw.rTouch;
-    Servo hw.forePush, hw.aftPush;
-    DcMotor hw.lDrive, hw.hw.rDrive, hw.collector, hw.shooter;
-    double lThresh, aftNeutral, foreNeutral;
-    */
-
-
-
 
 
     @Override
@@ -30,39 +19,6 @@ public class Automagical_RED3650 extends LinearOpMode{
         Hardware_3650 hw = new Hardware_3650(hardwareMap);
 
 
-        
-        //commented out until Hardware class tested
-        /*
-        lThresh = 0.08; //anything higher is white
-
-
-        //rest positions for servos
-        aftNeutral = .1;
-        foreNeutral = 1;
-
-        //button pushing servos
-        hw.forePush = hardwareMap.servo.get("hw.forePush");
-        hw.aftPush = hardwareMap.servo.get("hw.aftPush");
-
-        hw.lDrive = hardwareMap.dcMotor.get("hw.lDrive");
-        hw.rDrive = hardwareMap.dcMotor.get("hw.rDrive");
-        hw.collector = hardwareMap.dcMotor.get("hw.collector");
-        hw.shooter = hardwareMap.dcMotor.get("hw.shooter");
-
-        hw.colorSensor = hardwareMap.hw.colorSensor.get("hw.colorSensor");
-
-        hw.colorSensor.enableLed(false);
-        hw.light = hardwareMap.hw.lightSensor.get("hw.light");
-
-        hw.lTouch = hardwareMap.touchSensor.get("hw.lTouch");
-        hw.rTouch = hardwareMap.touchSensor.get("hw.rTouch");
-
-        hw.lDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        //set servos to rest position
-        hw.forePush.setPosition(foreNeutral);
-        hw.aftPush.setPosition(aftNeutral);
-        */
 
 
         waitForStart(); //waits for start button to be pressed

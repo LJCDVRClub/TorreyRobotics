@@ -17,9 +17,13 @@ public class Hardware_3650 {
     TouchSensor lTouch, rTouch;
     Servo forePush, aftPush;
     DcMotor lDrive, rDrive, collector, shooter;
-    double lThresh, aftNeutral, foreNeutral;
+    double lThresh, aftNeutral, foreNeutral, initialHeading;
+    IMU_class imu;
 
     public Hardware_3650(HardwareMap hardwareMap){
+
+        imu = new IMU_class("imu", hardwareMap);
+
         lThresh = 0.08; //anything higher is white
 
 
@@ -49,5 +53,12 @@ public class Hardware_3650 {
         //set servos to rest position
         forePush.setPosition(foreNeutral);
         aftPush.setPosition(aftNeutral);
+        initialHeading = getHeading(imu);
+
+
+    }
+
+    double getHeading(IMU_class a){
+        return a.getAngles()[0];
     }
 }

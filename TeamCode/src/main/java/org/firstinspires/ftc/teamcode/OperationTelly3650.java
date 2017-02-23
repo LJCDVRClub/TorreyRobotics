@@ -20,7 +20,7 @@ public class OperationTelly3650 extends OpMode {
     @Override
     public void init() {
 
-        hw =new Hardware_3650(hardwareMap);
+        hw = new Hardware_3650(hardwareMap);
         hw.rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hw.lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
