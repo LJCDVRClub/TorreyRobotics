@@ -237,7 +237,7 @@ public class Auto_RED_Gyro extends LinearOpMode{
         converted_target= initialHeading + target;
         double turnError;
         while(Math.abs(getHeading(a) - converted_target) > 3) {
-            turnError = converted_target - getHeading(imu);
+            turnError = converted_target - getHeading(a);
             if(Math.abs(turnError) > 30){
                 lDrive.setPower(0.2);
                 rDrive.setPower(-0.2);
@@ -246,8 +246,8 @@ public class Auto_RED_Gyro extends LinearOpMode{
                 lDrive.setPower(0.06 + turnError/30 * 0.14);
                 rDrive.setPower(-(0.06 + turnError/30 * 0.14));
             }
-            telemetry.addData("degrees to target", Math.abs(getHeading(imu) - converted_target));
-            telemetry.addData("current heading", getHeading(imu));
+            telemetry.addData("degrees to target", Math.abs(getHeading(a) - converted_target));
+            telemetry.addData("current heading", getHeading(a));
             telemetry.update();
         }
         lDrive.setPower(0);
