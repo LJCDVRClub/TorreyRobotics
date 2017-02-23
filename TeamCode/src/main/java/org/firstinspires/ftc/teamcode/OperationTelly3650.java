@@ -1,19 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
+
+
 
 
 @TeleOp(name="Operation: Telly", group="3650")
 public class OperationTelly3650 extends OpMode {
 
-    Hardware_3650 hw =new Hardware_3650(hardwareMap);
+    Hardware_3650 hw;
 
 
 
@@ -22,6 +20,7 @@ public class OperationTelly3650 extends OpMode {
     @Override
     public void init() {
 
+        hw =new Hardware_3650(hardwareMap);
         hw.rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hw.lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

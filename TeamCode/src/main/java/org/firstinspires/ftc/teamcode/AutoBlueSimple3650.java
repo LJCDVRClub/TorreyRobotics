@@ -10,11 +10,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name="Automagical Blue (Simple)", group = "3650")
 public class AutoBlueSimple3650 extends LinearOpMode {
     
-    Hardware_3650 hw = new Hardware_3650(hardwareMap);
+
 
     @Override
     public void runOpMode() throws InterruptedException {
-        
+        Hardware_3650 hw = new Hardware_3650(hardwareMap);
 
         waitForStart();
 

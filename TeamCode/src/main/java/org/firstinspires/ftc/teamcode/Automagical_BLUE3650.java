@@ -15,11 +15,11 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 public class Automagical_BLUE3650 extends LinearOpMode {
 
 
-    Hardware_3650 hw = new Hardware_3650(hardwareMap);
+
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        Hardware_3650 hw = new Hardware_3650(hardwareMap);
 
 
 

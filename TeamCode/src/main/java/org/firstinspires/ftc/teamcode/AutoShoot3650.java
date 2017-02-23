@@ -9,10 +9,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Autonomous(name = "Automagically Shoot", group = "3650")
 public class AutoShoot3650 extends LinearOpMode {
 
-    Hardware_3650 hw = new Hardware_3650(hardwareMap);
+
 
     @Override
     public void runOpMode() throws InterruptedException {
+        Hardware_3650 hw = new Hardware_3650(hardwareMap);
         
         waitForStart(); //wait for start button
 

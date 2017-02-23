@@ -10,11 +10,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name = "Automagical Red (Simple)", group = "3650")
 public class AutoRedSimple3650 extends LinearOpMode{
     
-    Hardware_3650 hw = new Hardware_3650(hardwareMap);
+
 
     @Override
     public void runOpMode() throws InterruptedException {
-        
+        Hardware_3650 hw = new Hardware_3650(hardwareMap);
 
         hw.lDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
