@@ -241,13 +241,13 @@ public class Auto_RED_Gyro extends LinearOpMode{
             if(Math.abs(turnError) > 180){
                 turnError = turnError - Math.signum(turnError) * 360;
             }
-            if(Math.abs(turnError) > 30){
-                lDrive.setPower(-Math.signum(turnError) * 0.25);
-                rDrive.setPower(Math.signum(turnError) * 0.25);
+            if(Math.abs(turnError) > 45){
+                lDrive.setPower(-Math.signum(turnError) * 0.3);
+                rDrive.setPower(Math.signum(turnError) * 0.3);
             }
             else{
-                lDrive.setPower(-Math.signum(turnError) * (0.06 + turnError/30 * 0.16));
-                rDrive.setPower(Math.signum(turnError) * (0.06 + turnError/30 * 0.16));
+                lDrive.setPower(-Math.signum(turnError) * (0.05 + turnError/45 * 0.25));
+                rDrive.setPower(Math.signum(turnError) * (0.05 + turnError/45 * 0.25));
             }
             telemetry.addData("degrees to target", Math.abs(getHeading(a) - converted_target));
             telemetry.addData("current heading", getHeading(a));
