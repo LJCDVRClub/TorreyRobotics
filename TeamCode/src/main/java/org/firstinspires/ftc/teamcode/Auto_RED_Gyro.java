@@ -139,10 +139,10 @@ public class Auto_RED_Gyro extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()-450);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()-450);
-        rDrive.setPower(.4);
-        lDrive.setPower(.4);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()-530);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()-530);
+        rDrive.setPower(.1 + (rDrive.getCurrentPosition() + 480) / 480 * 0.3);
+        lDrive.setPower(.1 + (rDrive.getCurrentPosition() + 480) / 480 * 0.3);
 
         Thread.sleep(2000);
 
@@ -236,7 +236,7 @@ public class Auto_RED_Gyro extends LinearOpMode{
         initialHeading = getHeading(a);
         converted_target= initialHeading + target;
         double turnError;
-        while(Math.abs(converted_target - getHeading(a)) > 0.5) {
+        while(Math.abs(converted_target - getHeading(a)) > 1) {
             turnError = converted_target - getHeading(a);
             if(Math.abs(turnError) > 180){
                 turnError = turnError - Math.signum(turnError) * 360;
@@ -246,8 +246,38 @@ public class Auto_RED_Gyro extends LinearOpMode{
                 rDrive.setPower(Math.signum(turnError) * 0.3);
             }
             else{
-                lDrive.setPower(-Math.signum(turnError) * (0.03 + Math.abs(turnError)/60 * 0.23));
-                rDrive.setPower(Math.signum(turnError) * (0.03 + Math.abs(turnError)/60 * 0.23));
+                lDrive.setPower(-Math.signum(turnError) * (0.065 + Math.abs(turnError)/60 * 0.23));
+                rDrive.setPower(Math.signum(turnError) * (0.065 + Math.abs(turnError)/60 * 0.23));
+            }
+            telemetry.addData("degrees to target", Math.abs(getHeading(a) - converted_target));
+            telemetry.addData("current heading", getHeading(a));
+            telemetry.update();
+        }
+        lDrive.setPower(0);
+        rDrive.setPower(0);
+        lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+    }
+
+    void turnToAbsoluteAngle(double target, IMU_class a){
+        lDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double converted_target;
+        converted_target= initialHeading + target;
+        double turnError;
+        while(Math.abs(converted_target - getHeading(a)) > 1) {
+            turnError = converted_target - getHeading(a);
+            if(Math.abs(turnError) > 180){
+                turnError = turnError - Math.signum(turnError) * 360;
+            }
+            if(Math.abs(turnError) > 60){
+                lDrive.setPower(-Math.signum(turnError) * 0.3);
+                rDrive.setPower(Math.signum(turnError) * 0.3);
+            }
+            else{
+                lDrive.setPower(-Math.signum(turnError) * (0.08 + Math.abs(turnError)/60 * 0.2));
+                rDrive.setPower(Math.signum(turnError) * (0.08 + Math.abs(turnError)/60 * 0.2));
             }
             telemetry.addData("degrees to target", Math.abs(getHeading(a) - converted_target));
             telemetry.addData("current heading", getHeading(a));
