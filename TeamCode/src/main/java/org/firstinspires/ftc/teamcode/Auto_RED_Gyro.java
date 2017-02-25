@@ -141,8 +141,8 @@ public class Auto_RED_Gyro extends LinearOpMode{
 
         rDrive.setTargetPosition(rDrive.getCurrentPosition() - 480);
         lDrive.setTargetPosition(lDrive.getCurrentPosition() - 480);
-        rDrive.setPower(.41);
-        lDrive.setPower(.41);
+        rDrive.setPower(.4);
+        lDrive.setPower(.4);
 
         Thread.sleep(2000);
 
