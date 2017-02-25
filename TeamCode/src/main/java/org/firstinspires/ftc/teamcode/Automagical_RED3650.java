@@ -73,8 +73,8 @@ public class Automagical_RED3650 extends LinearOpMode{
         Thread.sleep(500);
 
         //use touch sensors to be perpendicular to wall
-        hw.lDrive.setPower(.16);
-        hw.rDrive.setPower(.16);
+        hw.lDrive.setPower(.14);
+        hw.rDrive.setPower(.14);
         while(!(hw.rTouch.isPressed()) || !(hw.lTouch.isPressed())){
             if(hw.rTouch.isPressed()){
                 hw.rDrive.setPower(0);
