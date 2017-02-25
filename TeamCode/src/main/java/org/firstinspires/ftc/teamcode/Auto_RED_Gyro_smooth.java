@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
-@Autonomous(name = "Automagical: REDG", group = "3650")
-public class Auto_RED_Gyro extends LinearOpMode{
+@Autonomous(name = "Automagical: REDG_smooth", group = "3650")
+public class Auto_RED_Gyro_smooth extends LinearOpMode{
 
     ColorSensor colorSensor;
     LightSensor light;
@@ -141,8 +141,10 @@ public class Auto_RED_Gyro extends LinearOpMode{
 
         rDrive.setTargetPosition(rDrive.getCurrentPosition() - 480);
         lDrive.setTargetPosition(lDrive.getCurrentPosition() - 480);
-        rDrive.setPower(.4);
-        lDrive.setPower(.4);
+        while(Math.abs(rDrive.getCurrentPosition() - rDrive.getTargetPosition()) < 3) {
+            rDrive.setPower(.16 + Math.abs(rDrive.getCurrentPosition() - rDrive.getTargetPosition()) / 480 * 0.24);
+            lDrive.setPower(.16 + Math.abs(lDrive.getCurrentPosition() - lDrive.getTargetPosition()) / 480 * 0.24);
+        }
 
         Thread.sleep(2000);
 
