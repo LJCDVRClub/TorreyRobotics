@@ -51,7 +51,7 @@ public class OperationTelly3650 extends OpMode {
             hw.shooter.setPower(-1.0);
         }
         else if (!gamepad2.dpad_down && gamepad2.right_trigger > 0){
-            hw.shooter.setPower(gamepad2.right_trigger*.9);
+            hw.shooter.setPower(gamepad2.right_trigger);
         }
         else{
             hw.shooter.setPower(0);

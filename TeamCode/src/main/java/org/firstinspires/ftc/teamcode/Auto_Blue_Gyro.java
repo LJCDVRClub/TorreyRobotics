@@ -2,26 +2,20 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
- * Created by Bryce on 1/20/2017.
+ * Created by bryce on 2/25/17.
  */
-@Autonomous(name = "Automagical: Blue", group = "3650")
-public class Automagical_BLUE3650 extends LinearOpMode {
 
+@Autonomous(name = "Automagical BlueG", group = "3650")
+public class Auto_Blue_Gyro extends LinearOpMode {
 
-
+    Hardware_3650 hw;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Hardware_3650 hw = new Hardware_3650(hardwareMap);
-
-
+        hw = new Hardware_3650(hardwareMap);
 
         waitForStart(); //waits for start button to be pressed
 
@@ -33,15 +27,15 @@ public class Automagical_BLUE3650 extends LinearOpMode {
 
         //move to shooting position
 
-        hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition()+1200);
-        hw.lDrive.setTargetPosition(hw.lDrive.getCurrentPosition()+1220);
+        hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition()+1300);
+        hw.lDrive.setTargetPosition(hw.lDrive.getCurrentPosition()+1320);
         hw.rDrive.setPower(.4);
         hw.lDrive.setPower(.4);
 
         //spin up shooter
-        hw.shooter.setPower(.9);
+        hw.shooter.setPower(.95);
 
-        Thread.sleep(1500);
+        Thread.sleep(2000);
 
         //stop and start shooting
         hw.lDrive.setPower(0);
@@ -62,12 +56,14 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         hw.lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         hw.rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin towards right wall
-        hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition()+600);
-        hw.lDrive.setTargetPosition(hw.lDrive.getCurrentPosition()+2580);
-        hw.lDrive.setPower(.4);
-        hw.rDrive.setPower(.4);
+        hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition()+1450);
+        hw.lDrive.setTargetPosition(hw.lDrive.getCurrentPosition()+1450);
+        hw.lDrive.setPower(.6);
+        hw.rDrive.setPower(.6);
 
-        Thread.sleep(3000);
+        Thread.sleep(1500);
+
+        turnToAngle(-90,hw.imu);
 
         hw.rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hw.lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -80,7 +76,7 @@ public class Automagical_BLUE3650 extends LinearOpMode {
 
         //use touch sensors to be perpendicular to wall
         hw.lDrive.setPower(.22);
-        hw.rDrive.setPower(.2);
+        hw.rDrive.setPower(.22);
         while(!(hw.rTouch.isPressed()) || !(hw.lTouch.isPressed())){
             if(hw.rTouch.isPressed()){
                 hw.rDrive.setPower(0);
@@ -100,27 +96,29 @@ public class Automagical_BLUE3650 extends LinearOpMode {
         hw.lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         hw.rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition()-480);
-        hw.lDrive.setTargetPosition(hw.lDrive.getCurrentPosition()-480);
+        hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition()-450);
+        hw.lDrive.setTargetPosition(hw.lDrive.getCurrentPosition()-450);
         hw.rDrive.setPower(.4);
         hw.lDrive.setPower(.4);
 
         Thread.sleep(2000);
 
         //spin right to be parallel with beacons
-        hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition() - 1030);
+        /*hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition() - 970);
         hw.lDrive.setTargetPosition(hw.lDrive.getCurrentPosition() + 900);
         hw.rDrive.setPower(.3);
         hw.lDrive.setPower(.3);
-        Thread.sleep(1500);
+        Thread.sleep(1500);*/
+
+        turnToAngle(270,hw.imu);
 
         //sets motors back to normal mode
         hw.rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hw.lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //drive slowly in order to detect white line
-        hw.rDrive.setPower(-.18);
-        hw.lDrive.setPower(-.18);
+        hw.rDrive.setPower(-.16);
+        hw.lDrive.setPower(-.16);
 
         //while the line is not detected ...
         while (hw.light.getLightDetected() < hw.lThresh) {
@@ -202,5 +200,39 @@ public class Automagical_BLUE3650 extends LinearOpMode {
             //run away
         }
         Thread.sleep(1000);
+
+    }
+
+    void turnToAngle(double target, IMU_class a){
+        hw.lDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hw.rDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double converted_target;
+        hw.initialHeading = hw.getHeading(a);
+        converted_target = hw.initialHeading + target;
+        double turnError;
+        while(Math.abs(converted_target - hw.getHeading(a)) > 1) {
+            turnError = converted_target - hw.getHeading(a);
+            if(Math.abs(turnError) > 180){
+                turnError = turnError - Math.signum(turnError) * 360;
+            }
+            else if(Math.abs(turnError) > 60){
+                hw.lDrive.setPower(-Math.signum(turnError) * 0.3);
+                hw.rDrive.setPower(Math.signum(turnError) * 0.3);
+            }
+            //minimum power range: 0.03 - 0.08
+
+            else{
+                hw.lDrive.setPower(-Math.signum(turnError) * (0.065 + Math.abs(turnError)/60 * 0.23));
+                hw.rDrive.setPower(Math.signum(turnError) * (0.065 + Math.abs(turnError)/60 * 0.23));
+            }
+            telemetry.addData("degrees to target", Math.abs(hw.getHeading(a) - converted_target));
+            telemetry.addData("current heading", hw.getHeading(a));
+            telemetry.update();
+        }
+        hw.lDrive.setPower(0);
+        hw.rDrive.setPower(0);
+        hw.lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hw.rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 }

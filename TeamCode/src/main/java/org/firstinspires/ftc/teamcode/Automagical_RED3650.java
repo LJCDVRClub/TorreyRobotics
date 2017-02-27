@@ -36,7 +36,7 @@ public class Automagical_RED3650 extends LinearOpMode{
         hw.lDrive.setPower(.4);
 
         //spin up hw.shooter
-        hw.shooter.setPower(.9);
+        hw.shooter.setPower(.95);
 
         Thread.sleep(1500);
 

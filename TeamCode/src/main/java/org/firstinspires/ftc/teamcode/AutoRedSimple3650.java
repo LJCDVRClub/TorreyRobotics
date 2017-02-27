@@ -20,13 +20,15 @@ public class AutoRedSimple3650 extends LinearOpMode{
 
         waitForStart();
 
+        Thread.sleep(10000);
+
         //sets motors for distance
         hw.rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         hw.lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //move to shooting position
-        hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition()+1700);
-        hw.lDrive.setTargetPosition(hw.lDrive.getCurrentPosition()+1700);
+        hw.rDrive.setTargetPosition(hw.rDrive.getCurrentPosition()+1800);
+        hw.lDrive.setTargetPosition(hw.lDrive.getCurrentPosition()+1800);
         hw.rDrive.setPower(.4);
         hw.lDrive.setPower(.4);
 

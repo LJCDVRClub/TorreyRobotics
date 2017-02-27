@@ -78,7 +78,7 @@ public class Auto_RED_Gyro extends LinearOpMode{
         lDrive.setPower(.4);
 
         //spin up shooter
-        shooter.setPower(.9);
+        shooter.setPower(.95);
 
         Thread.sleep(1500);
 
@@ -101,25 +101,27 @@ public class Auto_RED_Gyro extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin towards left wall
-        lDrive.setTargetPosition(lDrive.getCurrentPosition()+600);
-        rDrive.setTargetPosition(rDrive.getCurrentPosition()+2380);
-        lDrive.setPower(.4);
-        rDrive.setPower(.4);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition()+1550);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition()+1550);
+        lDrive.setPower(.6);
+        rDrive.setPower(.6);
 
-        Thread.sleep(3000);
+        Thread.sleep(1500);
+        turnToAngle(85,imu);
 
         lDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //drive into wall
 
         //drive fast to save time
-        rDrive.setPower(.9);
         lDrive.setPower(.9);
-        Thread.sleep(500);
+        Thread.sleep(30);
+        rDrive.setPower(.9);
+        Thread.sleep(400);
 
         //use touch sensors to be perpendicular to wall
-        lDrive.setPower(.16);
-        rDrive.setPower(.16);
+        lDrive.setPower(.20);
+        rDrive.setPower(.20);
         while(!(rTouch.isPressed()) || !(lTouch.isPressed())){
             if(rTouch.isPressed()){
                 rDrive.setPower(0);
@@ -139,8 +141,8 @@ public class Auto_RED_Gyro extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        rDrive.setTargetPosition(rDrive.getCurrentPosition() - 480);
-        lDrive.setTargetPosition(lDrive.getCurrentPosition() - 480);
+        rDrive.setTargetPosition(rDrive.getCurrentPosition() - 550);
+        lDrive.setTargetPosition(lDrive.getCurrentPosition() - 550);
         rDrive.setPower(.4);
         lDrive.setPower(.4);
 
@@ -151,7 +153,7 @@ public class Auto_RED_Gyro extends LinearOpMode{
         lDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //spin right to be parallel with beacons
-        turnToAngle(-90, imu);
+        turnToAngle(-93, imu);
         Thread.sleep(2000);
 
         //sets motors back to normal mode
