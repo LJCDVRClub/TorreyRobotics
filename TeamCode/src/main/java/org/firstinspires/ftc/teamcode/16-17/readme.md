@@ -1,3 +1,3 @@
 ## All code goes here
 
-This is where we write the code.  Please end all file names with your team # to make IDing the programs easier.
+This is the folder for all code for the 2016-2017 season.
