@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.BattleBots17;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by bryce on 3/22/17.
  */
-
+@TeleOp(name = "BattleBots1", group = "2017")
 public class WenlongBattle extends OpMode {
 
     DcMotor flDrive, frDrive, rlDrive, rrDrive, deathStick;
@@ -28,10 +29,10 @@ public class WenlongBattle extends OpMode {
 
         deathStick.setPower(.7*gamepad1.right_trigger);
 
-        flDrive.setPower(.7*gamepad1.left_stick_y);
-        rrDrive.setPower(.7*gamepad1.right_stick_y);
-        frDrive.setPower(.7*gamepad1.right_stick_x);
-        rlDrive.setPower(.7*gamepad1.left_stick_x);
+        frDrive.setPower(.7*gamepad1.right_stick_y);
+        rrDrive.setPower(.7*gamepad1.right_stick_x);//rr
+        flDrive.setPower(.7*gamepad1.left_stick_x);
+        rlDrive.setPower(.7*gamepad1.left_stick_y);//x
 
     }
 }
