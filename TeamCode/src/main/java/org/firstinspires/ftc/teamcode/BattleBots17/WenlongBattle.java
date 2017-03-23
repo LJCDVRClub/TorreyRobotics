@@ -30,8 +30,8 @@ public class WenlongBattle extends OpMode {
         deathStick.setPower(.7*gamepad1.right_trigger);
 
         frDrive.setPower(.7*gamepad1.right_stick_y);
-        rrDrive.setPower(.7*gamepad1.right_stick_x);//rr
-        flDrive.setPower(.7*gamepad1.left_stick_x);
+        rrDrive.setPower(-.7*gamepad1.right_stick_x);//rr
+        flDrive.setPower(-.7*gamepad1.left_stick_x);
         rlDrive.setPower(.7*gamepad1.left_stick_y);//x
 
     }
