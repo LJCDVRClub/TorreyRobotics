@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by bryce on 3/22/17.
  */
-@TeleOp(name = "BattleBots1", group = "2017")
+@TeleOp(name = "WenlongBattle", group = "2017")
 public class WenlongBattle extends OpMode {
 
     DcMotor flDrive, frDrive, rlDrive, rrDrive, deathStick;
